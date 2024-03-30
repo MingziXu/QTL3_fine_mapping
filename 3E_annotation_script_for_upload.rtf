@@ -1,0 +1,1064 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red9\green79\blue209;\red38\green38\blue38;
+\red0\green0\blue0;\red16\green121\blue2;\red0\green0\blue0;\red15\green121\blue165;\red255\green255\blue255;
+\red26\green26\blue26;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c0\c40784\c85490;\cssrgb\c20000\c20000\c20000;
+\csgray\c0\c0;\cssrgb\c0\c53333\c0;\cssrgb\c0\c0\c0;\cssrgb\c0\c54942\c70689;\cssrgb\c100000\c100000\c100000;
+\cssrgb\c13333\c13333\c13333;}
+\margl1440\margr1440\vieww22220\viewh12980\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf0 1. move genome over\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \CocoaLigature0 scp /Users/xu000574/Documents/DATA/Lk_genome/Lakoh057scf.fa mx239@cbsushaw.biohpc.cornell.edu:/local/workdir/mx/genome\cf0 \CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+\
+2. Move transcriptomes over\
+scp /Users/xu000574/Desktop/lk_trinity_assembly.fasta mx239@\cf3 \ul \ulc3 cbsushaw.biohpc.cornell.edu:\cf2 \kerning1\expnd0\expndtw0 \ulnone \CocoaLigature0 /local/workdir/mx/transcriptomes/\
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 scp /Users/xu000574/Desktop/lp_trinity_assembly.fasta mx239@\cf3 \ul cbsushaw.biohpc.cornell.edu:\cf2 \kerning1\expnd0\expndtw0 \ulnone \CocoaLigature0 /local/workdir/mx/transcriptomes/\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+scp /Users/xu000574/Documents/DATA/QTL_fine_mapping/Lc_transcriptomes/Lc_cufflinks_transcriptome.gtf mx239@cbsushaw.biohpc.cornell.edu:/local/workdir/mx/transcriptomes/\
+scp /Users/xu000574/Documents/DATA/QTL_fine_mapping/Lc_transcriptomes/Trinity-GG_LaCer057_transcriptome.fasta mx239@cbsushaw.biohpc.cornell.edu:/local/workdir/mx/transcriptomes/\
+scp /Users/xu000574/Documents/DATA/QTL_fine_mapping/Lc_transcriptomes/lk_ESTs_mapped.gff3 mx239@cbsushaw.biohpc.cornell.edu:/local/workdir/mx/transcriptomes/\
+scp /Users/xu000574/Documents/DATA/QTL_fine_mapping/Lc_transcriptomes/Laupala_NCBI_ESTs.fasta mx239@cbsushaw.biohpc.cornell.edu:/local/workdir/mx/transcriptomes/\
+\
+3. prepare protein and repeat databases\
+scp /Users/xu000574/Documents/DATA/QTL_fine_mapping/Protein/uniprot_sprot.fasta mx239@cbsushaw.biohpc.cornell.edu:/local/workdir/mx/databases/\
+\
+\pard\pardeftab720\partightenfactor0
+Download the curated Dfam hmm. convert to fasta:\
+/programs/hmmer-3.3/bin/hmmemit -c Dfam_curatedonly.hmm > Dfam_curatedonly.fasta\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+4. download other cricket transcriptomes\
+\
+5. build custom repeat model for Lk\
+cd /local/workdir/mx/genome\
+/programs/RepeatModeler-2.0.1/BuildDatabase -name Lakoh057scf /local/workdir/mx/genome/Lakoh057scf.fa\
+nohup /programs/RepeatModeler-2.0.1/RepeatModeler -pa 30\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1  \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 -database /local/workdir/mx/genome/Lakoh057scf > /local/workdir/mx/genome/Lakoh057scf_repeatmodeler.out &\
+\
+6. download Uniprot protein databases\cf6 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+7. prepare sequence for annotation\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa\
+mkdir /local/workdir/mx/3e/maker\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001262 Lko057S009266 Lko057S001965 Lko057S002821 Lko057S000484 Lko057S001614 Lko057S005180 Lko057S005419 Lko057S000087 Lko057S003888 Lko057S003314 Lko057S000680 Lko057S005538 Lko057S001833 Lko057S001694 Lko057S003110 Lko057S000730 Lko057S006838 Lko057S010617 Lko057S002870 Lko057S007758 Lko057S000668 Lko057S006199 Lko057S000579 Lko057S001103 Lko057S001396 Lko057S001253 Lko057S000115 Lko057S006798 Lko057S005153 Lko057S002690 Lko057S002656 Lko057S000590 Lko057S001462 Lko057S003561 Lko057S000802 Lko057S009230 Lko057S003875 Lko057S006241 > /local/workdir/mx/3e/maker/3e_peak_scaffolds.fa\
+\
+8. Prepare sequence set for training\
+# I used scaffolds on LG4 int map (including the peak scaffolds), and scaffolds from 4 LG1 maps (used in QTL1 annotation training), 297 scaffolds total \
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S009986 Lko057S008828 Lko057S009417 Lko057S004998 Lko057S000830 Lko057S005509 Lko057S000443 Lko057S004595 Lko057S010406 Lko057S001308 Lko057S019773 Lko057S003913 Lko057S003608 Lko057S005813 Lko057S002013 Lko057S006622 Lko057S001973 Lko057S000520 Lko057S002045 Lko057S000426 Lko057S002268 Lko057S001706 Lko057S001565 Lko057S002317 Lko057S007863 Lko057S005685 Lko057S000376 Lko057S001151 Lko057S000496 Lko057S000086 Lko057S001617 Lko057S000372 Lko057S000552 Lko057S003425 Lko057S003881 Lko057S005869 Lko057S003235 Lko057S001389 Lko057S002556 Lko057S001852 Lko057S000982 Lko057S001671 Lko057S000900 Lko057S002196 Lko057S001413 Lko057S001005 Lko057S001635 Lko057S007927 Lko057S020057 Lko057S001401 Lko057S000814 Lko057S001150 Lko057S001649 Lko057S001860 Lko057S003430 Lko057S001315 Lko057S001367 Lko057S001415 Lko057S001282 Lko057S002061 Lko057S006899 Lko057S000220 Lko057S000182 Lko057S001416 Lko057S006382 Lko057S000802 Lko057S006767 Lko057S007475 Lko057S001287 Lko057S000921 Lko057S002696 Lko057S009827 Lko057S003507 Lko057S003393 Lko057S000836 Lko057S003782 Lko057S003206 Lko057S021549 Lko057S006379 Lko057S001717 Lko057S000511 Lko057S000201 Lko057S002091 Lko057S000669 Lko057S000672 Lko057S016360 Lko057S002428 Lko057S002982 Lko057S002192 Lko057S000258 Lko057S011153 Lko057S001609 Lko057S000591 Lko057S002036 Lko057S002887 Lko057S000542 Lko057S008420 Lko057S011290 Lko057S000585 Lko057S004198 Lko057S001530 Lko057S000422 Lko057S001713 Lko057S001486 Lko057S003154 Lko057S000999 Lko057S014364 Lko057S000674 Lko057S001412 Lko057S002987 Lko057S002392 Lko057S001279 Lko057S003492 Lko057S004284 Lko057S000357 Lko057S009786 Lko057S006466 Lko057S001683 Lko057S002572 Lko057S002438 Lko057S000492 Lko057S001220 Lko057S001608 Lko057S004442 Lko057S001262 Lko057S009266 Lko057S001965 Lko057S002821 Lko057S000484 Lko057S001614 Lko057S005180 Lko057S005419 Lko057S000087 Lko057S003888 Lko057S003314 Lko057S000680 Lko057S005538 Lko057S001833 Lko057S001694 Lko057S003110 Lko057S000730 Lko057S006838 Lko057S010617 Lko057S002870 Lko057S007758 Lko057S000668 Lko057S006199 Lko057S000579 Lko057S001103 Lko057S001396 Lko057S001253 Lko057S000115 Lko057S006798 Lko057S005153 Lko057S002690 Lko057S002656 Lko057S000590 Lko057S001462 Lko057S003561 Lko057S009230 Lko057S003875 Lko057S006241 Lko057S000105 Lko057S000162 Lko057S000191 Lko057S000193 Lko057S000202 Lko057S000208 Lko057S000277 Lko057S000325 Lko057S000334 Lko057S000335 Lko057S000368 Lko057S000377 Lko057S000390 Lko057S000409 Lko057S000415 Lko057S000437 Lko057S000468 Lko057S000488 Lko057S000494 Lko057S000534 Lko057S000559 Lko057S000570 Lko057S000577 Lko057S000618 Lko057S000619 Lko057S000625 Lko057S000646 Lko057S000663 Lko057S000671 Lko057S000682 Lko057S000817 Lko057S000846 Lko057S000914 Lko057S000946 Lko057S000949 Lko057S000967 Lko057S001012 Lko057S001104 Lko057S001117 Lko057S001124 Lko057S001235 Lko057S001249 Lko057S001330 Lko057S001332 Lko057S001489 Lko057S001493 Lko057S001506 Lko057S001559 Lko057S001589 Lko057S001633 Lko057S001643 Lko057S001672 Lko057S001680 Lko057S001710 Lko057S001734 Lko057S001745 Lko057S001771 Lko057S001792 Lko057S001867 Lko057S001888 Lko057S001906 Lko057S001910 Lko057S001914 Lko057S001936 Lko057S002041 Lko057S002068 Lko057S002077 Lko057S002082 Lko057S002151 Lko057S002179 Lko057S002206 Lko057S002234 Lko057S002242 Lko057S002274 Lko057S002276 Lko057S002424 Lko057S002469 Lko057S002490 Lko057S002548 Lko057S002553 Lko057S002761 Lko057S002764 Lko057S002871 Lko057S002906 Lko057S002946 Lko057S003059 Lko057S003112 Lko057S003162 Lko057S003259 Lko057S003281 Lko057S003344 Lko057S003407 Lko057S003488 Lko057S003531 Lko057S003597 Lko057S003766 Lko057S004016 Lko057S004073 Lko057S004095 Lko057S004100 Lko057S004205 Lko057S004233 Lko057S004286 Lko057S004313 Lko057S004747 Lko057S004771 Lko057S005037 Lko057S005058 Lko057S005099 Lko057S005105 Lko057S005114 Lko057S005140 Lko057S005654 Lko057S005656 Lko057S005707 Lko057S006291 Lko057S006572 Lko057S006803 Lko057S006859 Lko057S006875 Lko057S007228 Lko057S007321 Lko057S007702 Lko057S007909 Lko057S008178 Lko057S008276 Lko057S008626 Lko057S008708 Lko057S009296 Lko057S009374 Lko057S009651 Lko057S010045 Lko057S011026 Lko057S017174 Lko057S017397 > /local/workdir/mx/3e/maker/3e_training_scaffolds.fa\
+\
+9. run maker round 1\
+mkdir /local/workdir/mx/3e/maker/r1\
+\
+9.1 make bopts file\
+cat << EOF > /local/workdir/mx/3e/maker/r1/maker_bopts.ctl\
+#-----BLAST and Exonerate Statistics Thresholds\
+blast_type=ncbi+ #set to 'ncbi+', 'ncbi' or 'wublast'\
+\
+pcov_blastn=0.8 #Blastn Percent Coverage Threhold EST-Genome Alignments\
+pid_blastn=0.85 #Blastn Percent Identity Threshold EST-Genome Aligments\
+eval_blastn=1e-10 #Blastn eval cutoff\
+bit_blastn=40 #Blastn bit cutoff\
+depth_blastn=0 #Blastn depth cutoff (0 to disable cutoff)\
+\
+pcov_blastx=0.5 #Blastx Percent Coverage Threhold Protein-Genome Alignments\
+pid_blastx=0.4 #Blastx Percent Identity Threshold Protein-Genome Aligments\
+eval_blastx=1e-06 #Blastx eval cutoff\
+bit_blastx=30 #Blastx bit cutoff\
+depth_blastx=0 #Blastx depth cutoff (0 to disable cutoff)\
+\
+pcov_tblastx=0.8 #tBlastx Percent Coverage Threhold alt-EST-Genome Alignments\
+pid_tblastx=0.85 #tBlastx Percent Identity Threshold alt-EST-Genome Aligments\
+eval_tblastx=1e-10 #tBlastx eval cutoff\
+bit_tblastx=40 #tBlastx bit cutoff\
+depth_tblastx=0 #tBlastx depth cutoff (0 to disable cutoff)\
+\
+pcov_rm_blastx=0.5 #Blastx Percent Coverage Threhold For Transposable Element Masking\
+pid_rm_blastx=0.4 #Blastx Percent Identity Threshold For Transposbale Element Masking\
+eval_rm_blastx=1e-06 #Blastx eval cutoff for transposable element masking\
+bit_rm_blastx=30 #Blastx bit cutoff for transposable element masking\
+\
+ep_score_limit=20 #Exonerate protein percent of maximal score threshold\
+en_score_limit=20 #Exonerate nucleotide percent of maximal score threshold\
+EOF\
+\
+9.2 make exe file\
+cat << EOF > /local/workdir/mx/3e/maker/r1/maker_exe.ctl\
+#-----Location of Executables Used by MAKER/EVALUATOR\
+makeblastdb=/programs/ncbi-blast-2.13.0/bin/makeblastdb #location of NCBI+ makeblastdb executable\
+blastn=/programs/ncbi-blast-2.13.0/bin/blastn #location of NCBI+ blastn executable\
+blastx=/programs/ncbi-blast-2.13.0/bin/blastx #location of NCBI+ blastx executable\
+tblastx=/programs/ncbi-blast-2.13.0/bin/tblastx #location of NCBI+ tblastx executable\
+formatdb=/programs/blast-2.2.26/bin/formatdb #location of NCBI formatdb executable\
+blastall=/programs/blast-2.2.26/bin/blastall #location of NCBI blastall executable\
+xdformat= #location of WUBLAST xdformat executable\
+blasta= #location of WUBLAST blasta executable\
+RepeatMasker=/programs/RepeatMasker_4-1-0/RepeatMasker #location of RepeatMasker executable\
+exonerate=/programs/exonerate-2.2.0-x86_64/bin/exonerate #location of exonerate executable\
+\
+#-----Ab-initio Gene Prediction Algorithms\
+snap= #location of snap executable\
+gmhmme3= #location of eukaryotic genemark executable\
+gmhmmp= #location of prokaryotic genemark executable\
+augustus=/programs/Augustus-3.3.3/bin/augustus #location of augustus executable\
+fgenesh= #location of fgenesh executable\
+tRNAscan-SE= #location of trnascan executable\
+snoscan= #location of snoscan executable\
+\
+#-----Other Algorithms\
+probuild= #location of probuild executable (required for genemark)\
+EOF\
+\
+10.3 make opts file\
+cat << EOF > /local/workdir/mx/3e/maker/r1/maker_opts.ctl\
+#-----Genome (these are always required)\
+genome=/local/workdir/mx/3e/maker/3e_training_scaffolds.fa #genome sequence (fasta file or fasta embeded in GFF3 file)\
+organism_type=eukaryotic #eukaryotic or prokaryotic. Default is eukaryotic\
+\
+#-----Re-annotation Using MAKER Derived GFF3\
+maker_gff= #MAKER derived GFF3 file\
+est_pass=0 #use ESTs in maker_gff: 1 = yes, 0 = no\
+altest_pass=0 #use alternate organism ESTs in maker_gff: 1 = yes, 0 = no\
+protein_pass=0 #use protein alignments in maker_gff: 1 = yes, 0 = no\
+rm_pass=0 #use repeats in maker_gff: 1 = yes, 0 = no\
+model_pass=0 #use gene models in maker_gff: 1 = yes, 0 = no\
+pred_pass=0 #use ab-initio predictions in maker_gff: 1 = yes, 0 = no\
+other_pass=0 #passthrough anyything else in maker_gff: 1 = yes, 0 = no\
+\
+#-----EST Evidence (for best results provide a file for at least one)\
+est=/local/workdir/mx/transcriptomes/lk_trinity_assembly.fasta #set of ESTs or assembled mRNA-seq in fasta format\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 altest=/local/workdir/mx/transcriptomes/lp_trinity_assembly.fasta,/local/workdir/mx/transcriptomes/Trinity-GG_LaCer057_transcriptome.fasta\cf2  #EST/cDNA sequence file in fasta format from an alternate organism\
+est_gff= #aligned ESTs or mRNA-seq from an external GFF3 file\
+altest_gff= #aligned ESTs from a closly relate species in GFF3 format\
+\
+#-----Protein Homology Evidence (for best results provide a file for at least one)\
+protein=/local/workdir/mx/databases/uniprot_sprot.fasta #protein sequence file in fasta format (i.e. from mutiple oransisms)\
+protein_gff=  #aligned protein homology evidence from an external GFF3 file\
+\
+#-----Repeat Masking (leave values blank to skip repeat masking)\
+model_org=all #select a model organism for RepBase masking in RepeatMasker\
+rmlib=/local/workdir/mx/genome/RM_1842499.ThuMay181453462023/consensi.fa.classified #provide an organism specific repeat library in fasta format for RepeatMasker\
+repeat_protein=/local/workdir/mx/databases/Dfam_curatedonly.fasta #provide a fasta file of transposable element proteins for RepeatRunner\
+rm_gff= #pre-identified repeat elements from an external GFF3 file\
+prok_rm=0 #forces MAKER to repeatmask prokaryotes (no reason to change this), 1 = yes, 0 = no\
+softmask=1 #use soft-masking rather than hard-masking in BLAST (i.e. seg and dust filtering)\
+\
+#-----Gene Prediction\
+snaphmm= #SNAP HMM file\
+gmhmm= #GeneMark HMM file\
+augustus_species= #Augustus gene prediction species model\
+fgenesh_par_file= #FGENESH parameter file\
+pred_gff= #ab-initio predictions from an external GFF3 file\
+model_gff= #annotated gene models from an external GFF3 file (annotation pass-through)\
+est2genome=1 #infer gene predictions directly from ESTs, 1 = yes, 0 = no\
+protein2genome=1 #infer predictions from protein homology, 1 = yes, 0 = no\
+trna=0 #find tRNAs with tRNAscan, 1 = yes, 0 = no\
+snoscan_rrna= #rRNA file to have Snoscan find snoRNAs\
+unmask=0 #also run ab-initio prediction programs on unmasked sequence, 1 = yes, 0 = no\
+\
+#-----Other Annotation Feature Types (features MAKER doesn't recognize)\
+other_gff= #extra features to pass-through to final MAKER generated GFF3 file\
+\
+#-----External Application Behavior Options\
+alt_peptide=C #amino acid used to replace non-standard amino acids in BLAST databases\
+cpus=1 #max number of cpus to use in BLAST and RepeatMasker (not for MPI, leave 1 when using MPI)\
+\
+#-----MAKER Behavior Options\
+max_dna_len=300000 #length for dividing up contigs into chunks (increases/decreases memory usage)\
+min_contig=1 #skip genome contigs below this length (under 10kb are often useless)\
+\
+pred_flank=200 #flank for extending evidence clusters sent to gene predictors\
+pred_stats=0 #report AED and QI statistics for all predictions as well as models\
+AED_threshold=1 #Maximum Annotation Edit Distance allowed (bound by 0 and 1)\
+min_protein=0 #require at least this many amino acids in predicted proteins\
+alt_splice=0 #Take extra steps to try and find alternative splicing, 1 = yes, 0 = no\
+always_complete=0 #extra steps to force start and stop codons, 1 = yes, 0 = no\
+map_forward=0 #map names and attributes forward from old GFF3 genes, 1 = yes, 0 = no\
+keep_preds=0 #Concordance threshold to add unsupported gene prediction (bound by 0 and 1)\
+\
+split_hit=20000 #length for the splitting of hits (expected max intron size for evidence alignments)\
+single_exon=0 #consider single exon EST evidence when generating annotations, 1 = yes, 0 = no\
+single_length=250 #min length required for single exon ESTs if 'single_exon is enabled'\
+correct_est_fusion=0 #limits use of ESTs in annotation to avoid fusion genes\
+\
+tries=2 #number of times to try a contig if there is a failure for some reason\
+clean_try=0 #remove all data from previous run before retrying, 1 = yes, 0 = no\
+clean_up=0 #removes theVoid directory with individual analysis files, 1 = yes, 0 = no\
+TMP= #specify a directory other than the system default temporary directory for temporary files\
+EOF\
+\
+10. run maker round 1\
+chmod 755 /local/workdir/mx/3e/maker/r1/maker_bopts.ctl\
+chmod 755 /local/workdir/mx/3e/maker/r1/maker_exe.ctl\
+chmod 755 /local/workdir/mx/3e/maker/r1/maker_opts.ctl\
+\
+cd /local/workdir/mx/3e/maker/r1\
+nohup /programs/maker-3.01/bin/maker -base lg4_r1 maker_opts.ctl maker_bopts.ctl maker_exe.ctl &\
+\
+\
+11. extract genes and QC data from Maker round 1\
+\cf7 /programs/maker-3.01/bin\CocoaLigature1 /gff3_merge -s -d \cf2 \CocoaLigature0 /local/workdir/mx/3e/maker/r1/lg4_r1.maker.output/lg4_r1_master_datastore_index.log > /local/workdir/mx/3e/maker/r1/lg4_r1_all.gff\
+/programs/maker-3.01/bin/\cf7 \CocoaLigature1 fasta_merge -d \cf2 \CocoaLigature0 /local/workdir/mx/3e/maker/r1/lg4_r1.maker.output/lg4_r1_master_datastore_index.log\
+\cf7 /programs/maker-3.01/bin\CocoaLigature1 /gff3_merge\cf2 \CocoaLigature0  -s -n -d /local/workdir/mx/3e/maker/r1/lg4_r1.maker.output/lg4_r1_master_datastore_index.log > /local/workdir/mx/3e/maker/r1/lg4_r1_noseq.gff\
+cat /local/workdir/mx/3e/maker/r1/lg4_r1_all.gff | awk '\{ if ($3 == "gene") print $0 \}' | awk '\{ sum += ($5 - $4) \} END \{ print NR, sum / NR \}'\
+\
+\cf8 \
+\cf7 12. obtain evidence file\
+awk '\{ if ($2 == "est2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1_\cf7 est2genome.gff\
+awk '\{ if ($2 == "cdna2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _cdna2genome.gff\
+awk '\{ if ($2 == "protein2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _protein2genome.gff\
+awk '\{ if ($2 ~ "repeat") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _repeats.gff\
+\
+13. training with Augustus round 1\
+13.1 transfer config files to local directory and set the path\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 cp -r / /local/workdir/mx/3e/augustus\
+export LD_LIBRARY_PATH=/programs/boost_1_62_0/lib \
+export AUGUSTUS_CONFIG_PATH=/local/workdir/mx/3e/augustus/config\
+export LC_ALL=en_US.utf-8 \
+export LANG=en_US.utf-8\cf7 \
+\
+13.2 generate position file\
+mkdir \cf2 /local/workdir/mx/3e/augustus\
+mkdir /local/workdir/mx/3e/augustus/r1\
+\
+awk -v OFS="\\t" '\{ if ($3 == "mRNA") print $1, $4, $5 \}' /local/workdir/mx/3e/maker/r1/lg4_r1_noseq.gff | awk -v OFS="\\t" '\{ if ($2 < 1000) print $1, "0", $3+1000; else print $1, $2-1000, $3+1000 \}' > /local/workdir/mx/3e/augustus/r1/lg4_r1_all.maker.transcripts1000.pos\
+\
+## if the end of the gene is beyond the sceffold, truncate at the end of the scaffold, rename the position file as /local/workdir/mx/3e/augustus/r1/lg4_r1_all.maker.transcripts1000.clean.pos ##\
+\
+cd /local/workdir/mx/3e/augustus/r1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/3e/maker/3e_training_scaffolds.fa\
+/programs/bedtools-2.30.0/bin/bedtools getfasta -fi /local/workdir/mx/3e/maker/3e_training_scaffolds.fa -bed /local/workdir/mx/3e/augustus/r1/lg4_r1_all.maker.transcripts1000.clean.pos -fo /local/workdir/mx/3e/augustus/r1/lg4_r1_all.maker.transcripts1000.clean.pos.fasta\
+\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 source /programs/miniconda3/bin/activate busco-5.5.0 \
+cp -r /programs/miniconda3/envs/busco-5.5.0/config \cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+export AUGUSTUS_CONFIG_PATH=\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3/config\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+busco -i /local/workdir/mx/3e/augustus/r1/lg4_r1_all.maker.transcripts1000.clean.pos.fasta -o lg4_r1 -l insecta_odb10 -m genome -c 40 --long --augustus --augustus_species=fly --augustus_parameters=\'91\'97-progress=true\'92 > /local/workdir/mx/3e/augustus/r1/BUSCO.log\
+\
+mkdir /local/workdir/mx/programs/Augustus-3.3.3/config/species/Laupala_kohalensis_lg4_r1\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 cp -r \cf2 /local/workdir/mx/3e/augustus/r1/lg4_r1/run_insecta_odb10/augustus_output/retraining_parameters/BUSCO_lg4_r1/*.* /local/workdir/mx/programs/Augustus-3.3.3/config/species/Laupala_kohalensis_lg4_r1\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+cd /local/workdir/mx/programs/Augustus-3.3.3/config/species/Laupala_kohalensis_lg4_r1\
+cp ./BUSCO_lg4_r1_exon_probs.pbl ./Laupala_kohalensis_lg4_r1_exon_probs.pbl &\
+cp ./BUSCO_lg4_r1_igenic_probs.pbl ./Laupala_kohalensis_lg4_r1_igenic_probs.pbl &\
+cp ./BUSCO_lg4_r1_intron_probs.pbl ./Laupala_kohalensis_lg4_r1_intron_probs.pbl &\
+cp ./BUSCO_lg4_r1_metapars.cfg ./Laupala_kohalensis_lg4_r1_metapars.cfg &\
+cp ./BUSCO_lg4_r1_metapars.cgp.cfg ./Laupala_kohalensis_lg4_r1_metapars.cgp.cfg &\
+cp ./BUSCO_lg4_r1_metapars.utr.cfg ./Laupala_kohalensis_lg4_r1_metapars.utr.cfg &\
+cp ./BUSCO_lg4_r1_parameters.cfg ./Laupala_kohalensis_lg4_r1_parameters.cfg &\
+cp ./BUSCO_lg4_r1_parameters.cfg.orig1 ./Laupala_kohalensis_lg4_r1_parameters.cfg.orig1 &\
+cp ./BUSCO_lg4_r1_weightmatrix.txt ./Laupala_kohalensis_lg4_r1_weightmatrix.txt\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\
+=============================maker round 2=====================================\
+14. run maker round 2\
+mkdir /local/workdir/mx/3e/maker/r2\
+\
+14.1. make control files\
+cp /local/workdir/mx/3e/maker/r1/maker_bopts.ctl /local/workdir/mx/3e/maker/r2/maker_bopts.ctl\
+\
+cat << EOF > /local/workdir/mx/3e/maker/r2/maker_exe.ctl\
+#-----Location of Executables Used by MAKER/EVALUATOR\
+makeblastdb=/programs/ncbi-blast-2.13.0/bin/makeblastdb #location of NCBI+ makeblastdb executable\
+blastn=/programs/ncbi-blast-2.13.0/bin/blastn #location of NCBI+ blastn executable\
+blastx=/programs/ncbi-blast-2.13.0/bin/blastx #location of NCBI+ blastx executable\
+tblastx=/programs/ncbi-blast-2.13.0/bin/tblastx #location of NCBI+ tblastx executable\
+formatdb=/programs/blast-2.2.26/bin/formatdb #location of NCBI formatdb executable\
+blastall=/programs/blast-2.2.26/bin/blastall #location of NCBI blastall executable\
+xdformat= #location of WUBLAST xdformat executable\
+blasta= #location of WUBLAST blasta executable\
+RepeatMasker=/programs/RepeatMasker_4-1-0/RepeatMasker #location of RepeatMasker executable\
+exonerate=/programs/exonerate-2.2.0-x86_64/bin/exonerate #location of exonerate executable\
+\
+#-----Ab-initio Gene Prediction Algorithms\
+snap= #location of snap executable\
+gmhmme3= #location of eukaryotic genemark executable\
+gmhmmp= #location of prokaryotic genemark executable\
+augustus=/local/workdir/mx/programs/Augustus-3.3.3/bin/augustus #location of augustus executable\
+fgenesh= #location of fgenesh executable\
+tRNAscan-SE= #location of trnascan executable\
+snoscan= #location of snoscan executable\
+\
+#-----Other Algorithms\
+probuild= #location of probuild executable (required for genemark)\
+EOF\
+\
++++++++++++++++++++++++++++++++++++++++++++++++\
+cat << EOF > /local/workdir/mx/3e/maker/r2/maker_opts.ctl\
+#-----Genome (these are always required)\
+genome=/local/workdir/mx/3e/maker/3e_training_scaffolds.fa #genome sequence (fasta file or fasta embeded in GFF3 file)\
+organism_type=eukaryotic #eukaryotic or prokaryotic. Default is eukaryotic\
+\
+#-----Re-annotation Using MAKER Derived GFF3\
+maker_gff= #MAKER derived GFF3 file\
+est_pass=0 #use ESTs in maker_gff: 1 = yes, 0 = no\
+altest_pass=0 #use alternate organism ESTs in maker_gff: 1 = yes, 0 = no\
+protein_pass=0 #use protein alignments in maker_gff: 1 = yes, 0 = no\
+rm_pass=0 #use repeats in maker_gff: 1 = yes, 0 = no\
+model_pass=0 #use gene models in maker_gff: 1 = yes, 0 = no\
+pred_pass=0 #use ab-initio predictions in maker_gff: 1 = yes, 0 = no\
+other_pass=0 #passthrough anyything else in maker_gff: 1 = yes, 0 = no\
+\
+#-----EST Evidence (for best results provide a file for at least one)\
+est= #set of ESTs or assembled mRNA-seq in fasta format\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 altest= #EST/cDNA sequence file i\cf2 n fasta format from an alternate organism\
+est_gff=/local/workdir/mx/3e/maker/r1/lg4_r1_\cf7 est2genome.gff \cf2 #aligned ESTs or mRNA-seq from an external GFF3 file\
+altest_gff=/local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _cdna2genome.gff\cf2  #aligned ESTs from a closly relate species in GFF3 format\
+\
+#-----Protein Homology Evidence (for best results provide a file for at least one)\
+protein= #protein sequence file in fasta format (i.e. from mutiple oransisms)\
+protein_gff=/local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _protein2genome.gff\cf2  #aligned protein homology evidence from an external GFF3 file\
+\
+#-----Repeat Masking (leave values blank to skip repeat masking)\
+model_org= #select a model organism for RepBase masking in RepeatMasker\
+rmlib= #provide an organism specific repeat library in fasta format for RepeatMasker\
+repeat_protein=/local/workdir/mx/databases/Dfam_curatedonly.fasta #provide a fasta file of transposable element proteins for RepeatRunner\
+rm_gff=/local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _repeats.gff\cf2  #pre-identified repeat elements from an external GFF3 file\
+prok_rm=0 #forces MAKER to repeatmask prokaryotes (no reason to change this), 1 = yes, 0 = no\
+softmask=1 #use soft-masking rather than hard-masking in BLAST (i.e. seg and dust filtering)\
+\
+#-----Gene Prediction\
+snaphmm= #SNAP HMM file\
+gmhmm= #GeneMark HMM file\
+augustus_species=\cf7 Laupala_kohalensis_lg4_r1\cf2  #Augustus gene prediction species model\
+fgenesh_par_file= #FGENESH parameter file\
+pred_gff= #ab-initio predictions from an external GFF3 file\
+model_gff= #annotated gene models from an external GFF3 file (annotation pass-through)\
+est2genome=1 #infer gene predictions directly from ESTs, 1 = yes, 0 = no\
+protein2genome=1 #infer predictions from protein homology, 1 = yes, 0 = no\
+trna=0 #find tRNAs with tRNAscan, 1 = yes, 0 = no\
+snoscan_rrna= #rRNA file to have Snoscan find snoRNAs\
+unmask=0 #also run ab-initio prediction programs on unmasked sequence, 1 = yes, 0 = no\
+\
+#-----Other Annotation Feature Types (features MAKER doesn't recognize)\
+other_gff= #extra features to pass-through to final MAKER generated GFF3 file\
+\
+#-----External Application Behavior Options\
+alt_peptide=C #amino acid used to replace non-standard amino acids in BLAST databases\
+cpus=1 #max number of cpus to use in BLAST and RepeatMasker (not for MPI, leave 1 when using MPI)\
+\
+#-----MAKER Behavior Options\
+max_dna_len=300000 #length for dividing up contigs into chunks (increases/decreases memory usage)\
+min_contig=1 #skip genome contigs below this length (under 10kb are often useless)\
+\
+pred_flank=200 #flank for extending evidence clusters sent to gene predictors\
+pred_stats=0 #report AED and QI statistics for all predictions as well as models\
+AED_threshold=1 #Maximum Annotation Edit Distance allowed (bound by 0 and 1)\
+min_protein=0 #require at least this many amino acids in predicted proteins\
+alt_splice=0 #Take extra steps to try and find alternative splicing, 1 = yes, 0 = no\
+always_complete=0 #extra steps to force start and stop codons, 1 = yes, 0 = no\
+map_forward=0 #map names and attributes forward from old GFF3 genes, 1 = yes, 0 = no\
+keep_preds=0 #Concordance threshold to add unsupported gene prediction (bound by 0 and 1)\
+\
+split_hit=20000 #length for the splitting of hits (expected max intron size for evidence alignments)\
+single_exon=0 #consider single exon EST evidence when generating annotations, 1 = yes, 0 = no\
+single_length=250 #min length required for single exon ESTs if 'single_exon is enabled'\
+correct_est_fusion=0 #limits use of ESTs in annotation to avoid fusion genes\
+\
+tries=2 #number of times to try a contig if there is a failure for some reason\
+clean_try=0 #remove all data from previous run before retrying, 1 = yes, 0 = no\
+clean_up=0 #removes theVoid directory with individual analysis files, 1 = yes, 0 = no\
+TMP=/local/workdir/mx/3e/maker/tmp #specify a directory other than the system default temporary directory for temporary files\
+EOF\
+\
+\
+14.2. run maker round 2\
+cd /local/workdir/mx/3e/maker/r2\
+chmod 755 /local/workdir/mx/3e/maker/r2/maker_exe.ctl\
+chmod 755 /local/workdir/mx/3e/maker/r2/maker_opts.ctl\
+\pard\pardeftab720\partightenfactor0
+\cf7 export PATH=/programs/maker-3.01/bin:$PATH\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 export AUGUSTUS_CONFIG_PATH=\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3/config\cf7 \
+export \cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 LD_LIBRARY_PATH=/programs/boost_1_80_0/lib\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 nohup /programs/maker-3.01/bin/maker -base lg4_r2 maker_opts.ctl maker_bopts.ctl maker_exe.ctl &\cf7 \
+\pard\pardeftab720\partightenfactor0
+\cf7 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 15. extract genes and QC data from Maker round 2\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 /programs/maker-3.01/bin\CocoaLigature1 /gff3_merge -s -d \cf2 \CocoaLigature0 /local/workdir/mx/3e/maker/r2/lg4_r2.maker.output/lg4_r2_master_datastore_index.log > /local/workdir/mx/3e/maker/r2/lg4_r2_all.gff\
+/programs/maker-3.01/bin/\cf7 \CocoaLigature1 fasta_merge -d \cf2 \CocoaLigature0 /local/workdir/mx/3e/maker/r2/lg4_r2.maker.output/lg4_r2_master_datastore_index.log\
+\cf7 /programs/maker-3.01/bin\CocoaLigature1 /gff3_merge\cf2 \CocoaLigature0  -s -n -d /local/workdir/mx/3e/maker/r2/lg4_r2.maker.output/lg4_r2_master_datastore_index.log > /local/workdir/mx/3e/maker/r2/lg4_r2_noseq.gff\
+cat /local/workdir/mx/3e/maker/r2/lg4_r2_all.gff | awk '\{ if ($3 == "gene") print $0 \}' | awk '\{ sum += ($5 - $4) \} END \{ print NR, sum / NR \}'\
+\
+\
+\cf7 16. obtain evidence file\
+awk '\{ if ($2 == "est2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2_\cf7 est2genome.gff\
+awk '\{ if ($2 == "cdna2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2\cf7 _cdna2genome.gff\
+awk '\{ if ($2 == "protein2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2\cf7 _protein2genome.gff\
+awk '\{ if ($2 ~ "repeat") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r2/lg4_r2\cf7 _repeats.gff\
+\
+\
+17. training with Augustus round 2\
+17.1 generate position file\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 mkdir /local/workdir/mx/3e/augustus/r2\
+\
+awk -v OFS="\\t" '\{ if ($3 == "mRNA") print $1, $4, $5 \}' /local/workdir/mx/3e/maker/r2/lg4_r2_noseq.gff | awk -v OFS="\\t" '\{ if ($2 < 1000) print $1, "0", $3+1000; else print $1, $2-1000, $3+1000 \}' > /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.pos\
+\
+cd /local/workdir/mx/3e/augustus/r2\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/3e/maker/3e_training_scaffolds.fa\
+/programs/bedtools-2.30.0/bin/bedtools getfasta -fi /local/workdir/mx/3e/maker/3e_training_scaffolds.fa -bed /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.pos -fo /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.pos.fasta\
+\
+truncate genes at the end of the sacffold, rename file as /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.clean.pos\
+\
+17.2 generate fasta file\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/3e/maker/3e_training_scaffolds.fa\
+/programs/bedtools-2.30.0/bin/bedtools getfasta -fi /local/workdir/mx/3e/maker/3e_training_scaffolds.fa -bed /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.clean.pos -fo /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.clean.pos.fasta\
+\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 17.3 set path and run Augustus\
+source /programs/miniconda3/bin/activate busco-5.5.0 \
+export AUGUSTUS_CONFIG_PATH=\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3/config\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 busco -i /local/workdir/mx/3e/augustus/r2/lg4_r2_all.maker.transcripts1000.clean.pos.fasta -o lg4_r2 -l insecta_odb10 -m genome -c 40 --long --augustus --augustus_species=fly > /local/workdir/mx/3e/augustus/r2/BUSCO.log\
+\
+17.4 move retaining files to config directory\
+mkdir /local/workdir/mx/programs/Augustus-3.3.3/config/species/Laupala_kohalensis_lg4_r2\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 cp \cf2 /local/workdir/mx/3e/augustus/r2/lg4_r2/run_insecta_odb10/augustus_output/retraining_parameters/BUSCO_lg4_r2/*.* /local/workdir/mx/programs/Augustus-3.3.3/config/species/Laupala_kohalensis_lg4_r2\
+\
+cd /local/workdir/mx/programs/Augustus-3.3.3/config/species/Laupala_kohalensis_lg4_r2\
+cp ./BUSCO_lg4_r2_exon_probs.pbl ./Laupala_kohalensis_lg4_r2_exon_probs.pbl &\
+cp ./BUSCO_lg4_r2_igenic_probs.pbl ./Laupala_kohalensis_lg4_r2_igenic_probs.pbl &\
+cp ./BUSCO_lg4_r2_intron_probs.pbl ./Laupala_kohalensis_lg4_r2_intron_probs.pbl &\
+cp ./BUSCO_lg4_r2_metapars.cfg ./Laupala_kohalensis_lg4_r2_metapars.cfg &\
+cp ./BUSCO_lg4_r2_metapars.cgp.cfg ./Laupala_kohalensis_lg4_r2_metapars.cgp.cfg &\
+cp ./BUSCO_lg4_r2_metapars.utr.cfg ./Laupala_kohalensis_lg4_r2_metapars.utr.cfg &\
+cp ./BUSCO_lg4_r2_parameters.cfg ./Laupala_kohalensis_lg4_r2_parameters.cfg &\
+cp ./BUSCO_lg4_r2_parameters.cfg.orig1 ./Laupala_kohalensis_lg4_r2_parameters.cfg.orig1 &\
+cp ./BUSCO_lg4_r2_weightmatrix.txt ./Laupala_kohalensis_lg4_r2_weightmatrix.txt\
+\
+=========================================================================\
+18. Run maker round 3\
+mkdir /local/workdir/mx/3e/maker/r3\
+\
+18.1 make control files\
+cat << EOF > /local/workdir/mx/3e/maker/r3/maker_bopts.ctl\
+#-----BLAST and Exonerate Statistics Thresholds\
+blast_type=ncbi+ #set to 'ncbi+', 'ncbi' or 'wublast'\
+\
+pcov_blastn=0.8 #Blastn Percent Coverage Threhold EST-Genome Alignments\
+pid_blastn=0.85 #Blastn Percent Identity Threshold EST-Genome Aligments\
+eval_blastn=1e-10 #Blastn eval cutoff\
+bit_blastn=40 #Blastn bit cutoff\
+depth_blastn=0 #Blastn depth cutoff (0 to disable cutoff)\
+\
+pcov_blastx=0.5 #Blastx Percent Coverage Threhold Protein-Genome Alignments\
+pid_blastx=0.4 #Blastx Percent Identity Threshold Protein-Genome Aligments\
+eval_blastx=1e-06 #Blastx eval cutoff\
+bit_blastx=30 #Blastx bit cutoff\
+depth_blastx=0 #Blastx depth cutoff (0 to disable cutoff)\
+\
+pcov_tblastx=0.8 #tBlastx Percent Coverage Threhold alt-EST-Genome Alignments\
+pid_tblastx=0.85 #tBlastx Percent Identity Threshold alt-EST-Genome Aligments\
+eval_tblastx=1e-10 #tBlastx eval cutoff\
+bit_tblastx=40 #tBlastx bit cutoff\
+depth_tblastx=0 #tBlastx depth cutoff (0 to disable cutoff)\
+\
+pcov_rm_blastx=0.5 #Blastx Percent Coverage Threhold For Transposable Element Masking\
+pid_rm_blastx=0.4 #Blastx Percent Identity Threshold For Transposbale Element Masking\
+eval_rm_blastx=1e-06 #Blastx eval cutoff for transposable element masking\
+bit_rm_blastx=30 #Blastx bit cutoff for transposable element masking\
+\
+ep_score_limit=20 #Exonerate protein percent of maximal score threshold\
+en_score_limit=20 #Exonerate nucleotide percent of maximal score threshold\
+EOF\
+\
+++++++++++++++++++++++++++++++++++++++++++++++++\
+cat << EOF > /local/workdir/mx/3e/maker/r3/maker_exe.ctl\
+#-----Location of Executables Used by MAKER/EVALUATOR\
+makeblastdb=/programs/ncbi-blast-2.13.0/bin/makeblastdb #location of NCBI+ makeblastdb executable\
+blastn=/programs/ncbi-blast-2.13.0/bin/blastn #location of NCBI+ blastn executable\
+blastx=/programs/ncbi-blast-2.13.0/bin/blastx #location of NCBI+ blastx executable\
+tblastx=/programs/ncbi-blast-2.13.0/bin/tblastx #location of NCBI+ tblastx executable\
+formatdb=/programs/blast-2.2.26/bin/formatdb #location of NCBI formatdb executable\
+blastall=/programs/blast-2.2.26/bin/blastall #location of NCBI blastall executable\
+xdformat= #location of WUBLAST xdformat executable\
+blasta= #location of WUBLAST blasta executable\
+RepeatMasker=/programs/RepeatMasker_4-1-0/RepeatMasker #location of RepeatMasker executable\
+exonerate=/programs/exonerate-2.2.0-x86_64/bin/exonerate #location of exonerate executable\
+\
+#-----Ab-initio Gene Prediction Algorithms\
+snap= #location of snap executable\
+gmhmme3= #location of eukaryotic genemark executable\
+gmhmmp= #location of prokaryotic genemark executable\
+augustus=/local/workdir/mx/programs/Augustus-3.3.3/bin/augustus #location of augustus executable\
+fgenesh= #location of fgenesh executable\
+tRNAscan-SE= #location of trnascan executable\
+snoscan= #location of snoscan executable\
+\
+#-----Other Algorithms\
+probuild= #location of probuild executable (required for genemark)\
+EOF\
+\
++++++++++++++++++++++++++++++++++++++++++++++++++\
+cat << EOF > /local/workdir/mx/3e/maker/r3/maker_opts.ctl\
+#-----Genome (these are always required)\
+genome=/local/workdir/mx/3e/maker/3e_peak_scaffolds.fa #genome sequence (fasta file or fasta embeded in GFF3 file)\
+organism_type=eukaryotic #eukaryotic or prokaryotic. Default is eukaryotic\
+\
+#-----Re-annotation Using MAKER Derived GFF3\
+maker_gff= #MAKER derived GFF3 file\
+est_pass=0 #use ESTs in maker_gff: 1 = yes, 0 = no\
+altest_pass=0 #use alternate organism ESTs in maker_gff: 1 = yes, 0 = no\
+protein_pass=0 #use protein alignments in maker_gff: 1 = yes, 0 = no\
+rm_pass=0 #use repeats in maker_gff: 1 = yes, 0 = no\
+model_pass=0 #use gene models in maker_gff: 1 = yes, 0 = no\
+pred_pass=0 #use ab-initio predictions in maker_gff: 1 = yes, 0 = no\
+other_pass=0 #passthrough anyything else in maker_gff: 1 = yes, 0 = no\
+\
+#-----EST Evidence (for best results provide a file for at least one)\
+est= #set of ESTs or assembled mRNA-seq in fasta format\
+\cf7 altest= #EST/cDNA sequence file i\cf2 n fasta format from an alternate organism\
+est_gff=/local/workdir/mx/3e/maker/r1/lg4_r1_\cf7 est2genome.gff \cf2 #aligned ESTs or mRNA-seq from an external GFF3 file\
+altest_gff=/local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _cdna2genome.gff\cf2  #aligned ESTs from a closly relate species in GFF3 format\
+\
+#-----Protein Homology Evidence (for best results provide a file for at least one)\
+protein= #protein sequence file in fasta format (i.e. from mutiple oransisms)\
+protein_gff=/local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _protein2genome.gff\cf2  #aligned protein homology evidence from an external GFF3 file\
+\
+#-----Repeat Masking (leave values blank to skip repeat masking)\
+model_org= #select a model organism for RepBase masking in RepeatMasker\
+rmlib= #provide an organism specific repeat library in fasta format for RepeatMasker\
+repeat_protein=/local/workdir/mx/databases/Dfam_curatedonly.fasta #provide a fasta file of transposable element proteins for RepeatRunner\
+rm_gff=/local/workdir/mx/3e/maker/r1/lg4_r1\cf7 _repeats.gff\cf2  #pre-identified repeat elements from an external GFF3 file\
+prok_rm=0 #forces MAKER to repeatmask prokaryotes (no reason to change this), 1 = yes, 0 = no\
+softmask=1 #use soft-masking rather than hard-masking in BLAST (i.e. seg and dust filtering)\
+\
+#-----Gene Prediction\
+snaphmm= #SNAP HMM file\
+gmhmm= #GeneMark HMM file\
+\cf7 augustus_species=Laupala_kohalensis_lg4_r2 #Augustus gene prediction species model\cf2 \
+fgenesh_par_file= #FGENESH parameter file\
+pred_gff= #ab-initio predictions from an external GFF3 file\
+model_gff= #annotated gene models from an external GFF3 file (annotation pass-through)\
+est2genome=1 #infer gene predictions directly from ESTs, 1 = yes, 0 = no\
+protein2genome=1 #infer predictions from protein homology, 1 = yes, 0 = no\
+trna=0 #find tRNAs with tRNAscan, 1 = yes, 0 = no\
+snoscan_rrna= #rRNA file to have Snoscan find snoRNAs\
+unmask=0 #also run ab-initio prediction programs on unmasked sequence, 1 = yes, 0 = no\
+\
+#-----Other Annotation Feature Types (features MAKER doesn't recognize)\
+other_gff= #extra features to pass-through to final MAKER generated GFF3 file\
+\
+#-----External Application Behavior Options\
+alt_peptide=C #amino acid used to replace non-standard amino acids in BLAST databases\
+cpus=1 #max number of cpus to use in BLAST and RepeatMasker (not for MPI, leave 1 when using MPI)\
+\
+#-----MAKER Behavior Options\
+max_dna_len=300000 #length for dividing up contigs into chunks (increases/decreases memory usage)\
+min_contig=1 #skip genome contigs below this length (under 10kb are often useless)\
+\
+pred_flank=200 #flank for extending evidence clusters sent to gene predictors\
+pred_stats=0 #report AED and QI statistics for all predictions as well as models\
+AED_threshold=1 #Maximum Annotation Edit Distance allowed (bound by 0 and 1)\
+min_protein=0 #require at least this many amino acids in predicted proteins\
+alt_splice=0 #Take extra steps to try and find alternative splicing, 1 = yes, 0 = no\
+always_complete=0 #extra steps to force start and stop codons, 1 = yes, 0 = no\
+map_forward=0 #map names and attributes forward from old GFF3 genes, 1 = yes, 0 = no\
+keep_preds=0 #Concordance threshold to add unsupported gene prediction (bound by 0 and 1)\
+\
+split_hit=20000 #length for the splitting of hits (expected max intron size for evidence alignments)\
+single_exon=0 #consider single exon EST evidence when generating annotations, 1 = yes, 0 = no\
+single_length=250 #min length required for single exon ESTs if 'single_exon is enabled'\
+correct_est_fusion=0 #limits use of ESTs in annotation to avoid fusion genes\
+\
+tries=2 #number of times to try a contig if there is a failure for some reason\
+clean_try=0 #remove all data from previous run before retrying, 1 = yes, 0 = no\
+clean_up=0 #removes theVoid directory with individual analysis files, 1 = yes, 0 = no\
+TMP=/local/workdir/mx/3e/maker/tmp #specify a directory other than the system default temporary directory for temporary files\
+EOF\
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\
+\
+scp -r \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /Users/xu000574/Documents/DATA/QTL_fine_mapping/QTL3/annotation/Augustus/Laupala_kohalensis_reS204_tr17_r2 mx239@\cf3 \ul cbsushaw.biohpc.cornell.edu:\cf2 \kerning1\expnd0\expndtw0 \ulnone \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3/config/species\
+\
+scp -r \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /Users/xu000574/Documents/DATA/QTL_fine_mapping/QTL3/annotation/Augustus/Laupala_kohalensis_S360_r2 mx239@\cf3 \ul cbsushaw.biohpc.cornell.edu:\cf2 \kerning1\expnd0\expndtw0 \ulnone \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3/config/species\
+\
+22.2 run maker round 3\
+cd /local/workdir/mx/3e/maker/r3\
+chmod 755 /local/workdir/mx/3e/maker/r3/maker_exe.ctl\
+chmod 755 /local/workdir/mx/3e/maker/r3/maker_opts.ctl\
+chmod 755 /local/workdir/mx/3e/maker/r3/maker_bopts.ctl\
+\
+\pard\pardeftab720\partightenfactor0
+\cf7 export PATH=/programs/maker-3.01/bin:$PATH\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 export AUGUSTUS_CONFIG_PATH=\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/programs/Augustus-3.3.3/config\cf7 \
+export \cf4 \cb5 \expnd0\expndtw0\kerning0
+\CocoaLigature1 LD_LIBRARY_PATH=/programs/boost_1_80_0/lib\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 nohup /programs/maker-3.01/bin/maker -base lg4_r3 maker_opts.ctl maker_bopts.ctl maker_exe.ctl &\
+\
+\
+19. extract gene location and sequence from round 3\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 /programs/maker-3.01/bin\CocoaLigature1 /gff3_merge -s -d \cf2 \CocoaLigature0 /local/workdir/mx/3e/maker/r3/lg4_r3.maker.output/lg4_r3_master_datastore_index.log > /local/workdir/mx/3e/maker/r3/lg4_r3_all.gff\
+/programs/maker-3.01/bin/\cf7 \CocoaLigature1 fasta_merge -d \cf2 \CocoaLigature0 /local/workdir/mx/3e/maker/r3/lg4_r3.maker.output/lg4_r3_master_datastore_index.log\
+\cf7 /programs/maker-3.01/bin\CocoaLigature1 /gff3_merge\cf2 \CocoaLigature0  -s -n -d /local/workdir/mx/3e/maker/r3/lg4_r3.maker.output/lg4_r3_master_datastore_index.log > /local/workdir/mx/3e/maker/r3/lg4_r3_noseq.gff\
+cat /local/workdir/mx/3e/maker/r3/lg4_r3_all.gff | awk '\{ if ($3 == "gene") print $0 \}' | awk '\{ sum += ($5 - $4) \} END \{ print NR, sum / NR \}'\
+\
+\
+\cf7 20. obtain evidence file from round 3\
+awk '\{ if ($2 == "est2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_\cf7 est2genome.gff\
+awk '\{ if ($2 == "cdna2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3\cf7 _cdna2genome.gff\
+awk '\{ if ($2 == "protein2genome") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3\cf7 _protein2genome.gff\
+awk '\{ if ($2 ~ "repeat") print $0 \}' \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_noseq.gff\cf7  > \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3\cf7 _repeats.gff\
+\
+21. obtain gene sequences\
+cat \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_all.gff\cf7  | awk '\{ if ($3 == "gene") print $0 \}' > \cf2 /local/workdir/mx/3e/maker/r3/\cf7 lg4_r3_genes.gff\
+awk -v OFS="\\t" '\{ if ($3 == "gene") print $1, $4, $5 \}' \cf2 /local/workdir/mx/3e/maker/r3/lg4_r3_noseq.gff \cf7 > \cf2 /local/workdir/mx/3e/maker/r3/\cf7 lg4_r3_peak.scaffold.genes.pos\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 /programs/samtools-1.15.1-r/bin/samtools\cf7  faidx \cf2 /local/workdir/mx/3e/maker/3e_peak_scaffolds.fa\cf7 \
+\cf2 /programs/bedtools-2.30.0/bin/bedtools getfasta\cf7  -fi \cf2 /local/workdir/mx/3e/maker/3e_peak_scaffolds.fa\cf7  -bed \cf2 /local/workdir/mx/3e/maker/r3/\cf7 lg4_r3_peak.scaffold.genes.pos -fo \cf2 /local/workdir/mx/3e/maker/r3\cf7 /lg4_r3_peak_scaffold_gene.fasta\
+\
+grep \'93>\'94 \cf2 /local/workdir/mx/3e/maker/r3\cf7 /\cf2 lg4_r3_peak_scaffold_gene.fasta |wc -l\cf7 \
+\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 \
+===================================================================================\
+22. blast predicted gene sequences\
+\
+22.1 copy blast databases to workdir\
+\
+mkdir \cf2 /local/workdir/mx\cf7 /\cf2 databases/ncbi\
+cd /local/workdir/mx\cf7 /\cf2 databases/ncbi\cf7 \
+cp \cf2 /shared_data/genome_db/BLAST_NCBI/nr* ./\
+\
+\cf7 mkdir \cf2 /local/workdir/mx\cf7 /\cf2 databases/swissprot\
+cd /local/workdir/mx\cf7 /\cf2 databases/swissprot\cf7 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 cp\'a0\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /shared_data/genome_db/BLAST_NCBI\cf4 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 /\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 swissprot.\cf4 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 * ./\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\
+export BLASTDB=\cf2 /local/workdir/mx/databases/ncbi:/local/workdir/mx\cf7 /\cf2 databases/swissprot:$BLASTDB\cf7 \
+\
+22.2. blast against NCBI nr database\
+mkdir \cf2 /local/workdir/mx/3e/blast\cf7 \
+cd \cf2 /local/workdir/mx/3e/blast\
+\pard\pardeftab720\partightenfactor0
+\cf4 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 export\'a0PATH=\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /programs/ncbi-blast-2.13.0/bin\cf4 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 :$PATH\
+\pard\pardeftab720\partightenfactor0
+\cf7 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 nohup \cf2 /programs/ncbi-blast-2.13.0/bin/blastx\cf7  -task blastx -db \cf2 /local/workdir/mx/databases/\cf7 ncbi/nr -query \cf2 /local/workdir/mx/3e/maker/r3\cf7 /lg4_r3_peak_scaffold_gene.fasta -out \cf2 /local/workdir/mx/3e/blast\cf7 /blastx_lg4_r3_peak_scaffold_genes_nr_e1 -evalue 1 -outfmt 14 -num_threads 30 &\
+\
+22.3. blast against uniprot database\
+nohup \cf2 /programs/ncbi-blast-2.13.0/bin/blastx\cf7  -task blastx -db \cf2 /local/workdir/mx/databases\cf7 /\cf2 swissprot/swissprot\cf7  -query \cf2 /local/workdir/mx/3e/maker/r3\cf7 /lg4_r3_peak_scaffold_gene.fasta -out \cf2 /local/workdir/mx/3e/blast\cf7 /blastx_lg4_r3_peak_scaffold_genes_uniprot_e1 -evalue 1 -outfmt 14 -num_threads 30 &\
+\
+22.4. import both blast output into blast2go, combine blast results and export beat blast hit table\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \
+22.5. reblast na genes with relaxed e value\
+cat << EOF > /local/workdir/mx/3e/blast/blastx_lg4_e1_na_gene_pos.bed\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf7 Lko057S006199	15364	18029\
+Lko057S002821	57409	67434\
+Lko057S002821	181013	184357\
+Lko057S002821	184633	193016\
+Lko057S000802	457833	468931\
+Lko057S003888	7850	9661\
+Lko057S003888	18996	20480\
+Lko057S003888	33605	35714\
+Lko057S003888	70080	71186\
+Lko057S003888	63065	66851\
+Lko057S003888	86632	88210\
+Lko057S003888	88738	92251\
+Lko057S003888	109619	110849\
+Lko057S003888	116100	122750\
+Lko057S000590	106714	111850\
+Lko057S000590	116783	119128\
+Lko057S000590	1056364	1056904\
+Lko057S000590	1598990	1599918\
+Lko057S000590	2156567	2162612\
+Lko057S005153	164592	172888\
+Lko057S000484	57496	74833\
+Lko057S000484	150575	162167\
+Lko057S000484	327227	345302\
+Lko057S000484	523126	524517\
+Lko057S000484	745956	746925\
+Lko057S000484	751171	752653\
+Lko057S000484	753511	761334\
+Lko057S010617	130015	135702\
+Lko057S001965	180676	200806\
+Lko057S001965	211442	228453\
+Lko057S001965	231036	237827\
+Lko057S001965	515874	522928\
+Lko057S001965	648101	652190\
+Lko057S001965	653336	654282\
+Lko057S001965	654997	655715\
+Lko057S001965	656545	657882\
+Lko057S000668	26194	29291\
+Lko057S000668	1160093	1161438\
+Lko057S000668	967561	969769\
+Lko057S000668	1026974	1032676\
+Lko057S000668	1680418	1696315\
+Lko057S000668	1708062	1708525\
+Lko057S000668	2732381	2734384\
+Lko057S000668	2735057	2741613\
+Lko057S000668	2747270	2760905\
+Lko057S000668	2784121	2787243\
+Lko057S005419	512492	530438\
+Lko057S000087	487174	495370\
+Lko057S003314	8153	10655\
+Lko057S003314	4179	6072\
+Lko057S003314	38110	41031\
+Lko057S003314	58117	59182\
+Lko057S003314	76757	78292\
+Lko057S001103	96952	105280\
+Lko057S001462	343903	349064\
+Lko057S000730	106886	108070\
+Lko057S000730	514007	527177\
+Lko057S000730	572205	575748\
+Lko057S002690	4297	13348\
+Lko057S002690	290648	292714\
+Lko057S002690	332987	333605\
+Lko057S002690	337998	339389\
+Lko057S000579	442065	442270\
+Lko057S000579	490679	493296\
+Lko057S009230	67045	74667\
+Lko057S001833	54907	56629\
+Lko057S001833	151885	154828\
+Lko057S001833	184106	189704\
+Lko057S007758	69425	87606\
+Lko057S007758	472813	473238\
+Lko057S007758	909239	914434\
+Lko057S006798	450820	457420\
+Lko057S006798	466053	466707\
+Lko057S001262	808914	819946\
+Lko057S001262	823573	836416\
+Lko057S001262	1367369	1371176\
+Lko057S002870	12697	13106\
+Lko057S002870	43946	44293\
+Lko057S002870	341554	351259\
+Lko057S002870	1330624	1332062\
+Lko057S002870	1261224	1266557\
+Lko057S002870	1280306	1280851\
+Lko057S001396	411752	421137\
+Lko057S009266	315106	320209\
+Lko057S001694	334422	338411\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 EOF\cf7 \
+\
+\cf2 /programs/samtools-1.15.1-r/bin/samtools\cf7  faidx \cf2 /local/workdir/mx/3e/maker/3e_peak_scaffolds.fa\cf7 \
+\cf2 /programs/bedtools-2.30.0/bin/bedtools\cf7  getfasta -fi \cf2 /local/workdir/mx/3e/maker/3e_peak_scaffolds.fa\cf7  -bed \cf2 /local/workdir/mx/3e/blast/blastx_lg4_e1_na_gene_pos.bed\cf7  -fo \cf2 /local/workdir/mx/3e/blast\cf7 /NA_genes.fasta\
+\
+nohup \cf2 /programs/ncbi-blast-2.13.0/bin/blastx\cf7  -task blastx -db \cf2 /local/workdir/mx/databases/\cf7 ncbi/nr -query \cf2 /local/workdir/mx/3e/blast\cf7 /NA_genes.fasta -out \cf2 /local/workdir/mx/3e/blast\cf7 /output/na_genes_nr_e100 -evalue 100 -outfmt 14 -num_threads 30 &\
+\
+nohup \cf2 /programs/ncbi-blast-2.13.0/bin/blastx\cf7  -task blastx -db \cf2 /local/workdir/mx/databases\cf7 /\cf2 swissprot/swissprot\cf7  -query \cf2 /local/workdir/mx/3e/blast\cf7 /NA_genes.fasta -out \cf2 /local/workdir/mx/3e/blast\cf7 /output/na_genes_uniprot_e100 -evalue 100 -outfmt 14 -num_threads 30 &\
+\
+23. run Go mapping\
+23.1 load all blast results and gene fasta into blast2go basic\
+23.2 run Interpro scan \
+23.3 run go mapping\
+\
+24. filter genes by:\
+24.1: filter out retrovirus related sequences and TE\
+24.2: Identify potantially fragmented sequences\
+24.3: divide the non-retro genes into E < 1E-4 and >=1E-4\
+24.4: if a potentially fragmented gene has at least one fragment with an e value <1e-4, keep; otherwise, gose to the >=1E-4 categoty\
+\
+25. fix potentially fragmented genes\
+25.1 Carbonic anhydrase \
+25.1.1 use exonerate to distinguish which gene in the family it is\
+mkdir \cf2 /local/workdir/mx/3e/refine/ca\cf7 \
+\cf2 /programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001262:1100000-1600000 > /local/workdir/mx/3e/refine/ca/lk_ca.fa\
+scp /Users/xu000574/Downloads/Dro* \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 mx239@\cf7 cbsushaw.biohpc.cornell.edu:\cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/3e/refine/ca\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ca/Dro_ca1.fasta -Q protein -t /local/workdir/mx/3e/refine/ca/lk_ca.fa -T dna --exhaustive TRUE --showalignment\cf7 \
+\cf2 /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ca/Dro_ca2a.fasta -Q protein -t /local/workdir/mx/3e/refine/ca/lk_ca.fa -T dna --exhaustive TRUE --showalignment\cf7 \
+\cf2 /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ca/Dro_ca2b.fasta -Q protein -t /local/workdir/mx/3e/refine/ca/lk_ca.fa -T dna --exhaustive TRUE --showalignment\cf7 \
+\cf2 /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ca/Dro_ca3.fasta -Q protein -t /local/workdir/mx/3e/refine/ca/lk_ca.fa -T dna --exhaustive TRUE --showalignment\cf7 \
+\
+## ca2 isoform a is the best ##\
+\
+25.1.2 rerun blast to get e and sim\
+\
+\cf2 /programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001262:1279369-1587420 > /local/workdir/mx/3e/refine/ca/lk_ca2.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/genome/Lakoh057scf.fa -dbtype nucl -out /local/workdir/mx/genome/Lakoh057scf\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf -query /local/workdir/mx/3e/refine/ca/Dro_ca2a.fasta -evalue 1 -num_threads 30 -outfmt 5 -out /local/workdir/mx/3e/refine/ca/tblastn_Lko057_Dro_ca2.xml\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf -query /local/workdir/mx/3e/refine/ca/Dro_ca2a.fasta -evalue 1 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/ca/tblastn_Lko057_Dro_ca2.txt\
+\
+visualize blast result using Kablammo\
+\
+\
+25.2 Midasin \
+mkdir /local/workdir/mx/3e/refine/midasin\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001965:360000-740000 > /local/workdir/mx/3e/refine/midasin/lk_midasin.fa\
+scp /Users/xu000574/Downloads/Dro_midasin.fasta \cf0 \expnd0\expndtw0\kerning0
+\CocoaLigature1 mx239@\cf7 cbsushaw.biohpc.cornell.edu:\cf2 \kerning1\expnd0\expndtw0 \CocoaLigature0 /local/workdir/mx/3e/refine/midasin\
+nohup /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/midasin/Dro_midasin.fasta -Q protein -t /local/workdir/mx/3e/refine/midasin/lk_midasin.fa -T dna --exhaustive TRUE --showalignment &\
+\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001965:386256-682327 > /local/workdir/mx/3e/refine/midasin/lk_midasin2.fa\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf -query /local/workdir/mx/3e/refine/midasin/Dro_midasin.fasta -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/midasin/tblastn_Lko057_Dro_midasin.txt\
+\
+\
+25.3 Outer dynein arm-docking complex subunit 2\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all.fa -dbtype prot -out /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all\
+mkdir /local/workdir/mx/3e/refine/odad2\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S005419:1-100000 > /local/workdir/mx/3e/refine/odad2/lk_odad2.fa\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/odad2/lk_odad2.fa -evalue 1e-5 -num_threads 30 -outfmt 14 -out /local/workdir/mx/3e/refine/odad2/blastx_Lko057_Dro_odad2\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/odad2/lk_odad2.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/odad2/blastx_Lko057_Dro_odad2.txt\
+## Armadillo repeat-containing protein gudu ##\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf -query /local/workdir/mx/3e/refine/odad2/Dro_gudu.fasta -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/odad2/tblastn_Lko057_Dro_odad2.txt\
+## best hit on S003252 ##\
+\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/odad2/Dro_gudu.fasta -Q protein -t /local/workdir/mx/3e/refine/odad2/lk_odad2.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S005419:46088-73628 > /local/workdir/mx/3e/refine/odad2/lk_gudu.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/odad2/Dro_gudu.fasta -dbtype prot -out /local/workdir/mx/3e/refine/odad2/Dro_gudu\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/odad2/Dro_gudu -query /local/workdir/mx/3e/refine/odad2/lk_gudu.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/odad2/blastx_Dro_lk_gudu.txt\
+## E lower than the original, use original ##\
+\
+\
+25.4 Synaptic vesicle glycoprotein 2A (sv2a) \
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001833:1-200000 > /local/workdir/mx/3e/refine/sv2a/lk_sv2.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/sv2a/fly_sv2.fasta -dbtype prot -out /local/workdir/mx/3e/refine/sv2a/fly_sv2\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/sv2a/fly_sv2 -query /local/workdir/mx/3e/refine/sv2a/lk_sv2.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/sv2a/fly_sv2.txt\
+## \cf10 \cb9 \expnd0\expndtw0\kerning0
+\CocoaLigature1 synaptic vesicle 2-related protein ##\
+\
+\cf2 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/sv2a/Ano_sv2r.fasta -Q protein -t /local/workdir/mx/3e/refine/sv2a/lk_sv2.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001833:3129-188688 > /local/workdir/mx/3e/refine/sv2a/lk_sv2.fa\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/sv2a/fly_sv2 -query /local/workdir/mx/3e/refine/sv2a/lk_sv2.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/sv2a/fly_sv2.txt\
+\
+\
+25.5 Ryanodine receptor 1 (ryr1) \
+mkdir /local/workdir/mx/3e/refine/ryr1\
+cd /local/workdir/mx/3e/refine/ryr1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001833:200001-400000 > /local/workdir/mx/3e/refine/ryr1/lk_ryr1.fa\
+nohup /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ryr1/Dro_ryr1.fasta -Q protein -t /local/workdir/mx/3e/refine/ryr1/lk_ryr1.fa -T dna --exhaustive TRUE --showalignment &\
+# missing parts after 447 aa, extend lk sequence #\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001833:1-400000 > /local/workdir/mx/3e/refine/ryr1/lk_ryr1.fa\
+# last part of gene cut off by the scaffold ##\
+\
+\
+25.6 mapkkkk3 \
+mkdir /local/workdir/mx/3e/refine/mapkkkk3\
+cd /local/workdir/mx/3e/refine/mapkkkk3\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001833:300001-500000 > /local/workdir/mx/3e/refine/mapkkkk3/lk_mapkkkk3.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/mapkkkk3/Zoo_mapkkkk3.fasta -Q protein -t /local/workdir/mx/3e/refine/mapkkkk3/lk_mapkkkk3.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001833:400039-433828 > /local/workdir/mx/3e/refine/mapkkkk3/lk_mapkkkk3.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/mapkkkk3/Zoo_mapkkkk3.fasta -dbtype prot -out /local/workdir/mx/3e/refine/mapkkkk3/Zoo_mapkkkk3\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/mapkkkk3/Zoo_mapkkkk3 -query /local/workdir/mx/3e/refine/mapkkkk3/lk_mapkkkk3.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/mapkkkk3/blastx_zoo_lk_mapkkkk3.txt\
+\
+\
+25.7 morn4 \
+mkdir /local/workdir/mx/3e/refine/morn4\
+cd /local/workdir/mx/3e/refine/morn4\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S003110:1-100000 > /local/workdir/mx/3e/refine/morn4/lk_morn4.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/morn4/Zoo_morn4.fasta -Q protein -t /local/workdir/mx/3e/refine/morn4/lk_morn4.fa -T dna --exhaustive TRUE --showalignment\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/morn4/Zoo_morn4.fasta -dbtype prot -out /local/workdir/mx/3e/refine/morn4/Zoo_morn4\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S003110:19271-48997 > /local/workdir/mx/3e/refine/morn4/lk_morn4.fa\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/morn4/Zoo_morn4 -query /local/workdir/mx/3e/refine/morn4/lk_morn4.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/morn4/blastx_zoo_lk_morn4.txt\
+\
+\
+25.8 Dynein beta chain, ciliary \
+mkdir /local/workdir/mx/3e/refine/dbcc\
+cd /local/workdir/mx/3e/refine/dbcc\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000730:100001-570000 > /local/workdir/mx/3e/refine/dbcc/lk_dbcc.fa\
+nohup /programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/dbcc/Zoo_dbcc.fasta -Q protein -t /local/workdir/mx/3e/refine/dbcc/lk_dbcc.fa -T dna --exhaustive TRUE --showalignment &\
+\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/dbcc/Zoo_dbcc.fasta -dbtype prot -out /local/workdir/mx/3e/refine/dbcc/Zoo_dbcc\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000730:336243-480535 > /local/workdir/mx/3e/refine/morn4/lk_dbcc.fa\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/dbcc/Zoo_dbcc -query /local/workdir/mx/3e/refine/morn4/lk_dbcc.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/morn4/blastx_zoo_lk_dbcc.txt\
+\
+\
+25.9 ttll9 \
+mkdir /local/workdir/mx/3e/refine/ttll9\
+cd /local/workdir/mx/3e/refine/ttll9\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000730:400001-800000 > /local/workdir/mx/3e/refine/ttll9/lk_ttll9.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ttll9/sch_ttll9.fasta -Q protein -t /local/workdir/mx/3e/refine/ttll9/lk_ttll9.fa -T dna --exhaustive TRUE --showalignment\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/ttll9/sch_ttll9.fasta -dbtype prot -out /local/workdir/mx/3e/refine/ttll9/sch_ttll9\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/ttll9/sch_ttll9 -query /local/workdir/mx/3e/refine/ttll9/lk_ttll9.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/ttll9/blastx_sch_lk_ttll9.txt\
+\
+\
+25.10 aceh \
+mkdir /local/workdir/mx/3e/refine/aceh\
+cd /local/workdir/mx/3e/refine/aceh\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:500001-900000 > /local/workdir/mx/3e/refine/aceh/lk_aceh.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/aceh/Zoo_aceh.fasta -Q protein -t /local/workdir/mx/3e/refine/aceh/lk_aceh.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:538273-862494 > /local/workdir/mx/3e/refine/aceh/lk_aceh.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/aceh/Zoo_aceh.fasta -dbtype prot -out /local/workdir/mx/3e/refine/aceh/Zoo_aceh\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/aceh/Zoo_aceh -query /local/workdir/mx/3e/refine/aceh/lk_aceh.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/aceh/blastx_Zoo_lk_aceh.txt\
+\
+## E higher than original value, rerun using original best blast hit ##\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:500001-900000 > /local/workdir/mx/3e/refine/aceh/lk_aceh.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/aceh/Lep_aceh.fasta -Q protein -t /local/workdir/mx/3e/refine/aceh/lk_aceh.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:544306-890787 > /local/workdir/mx/3e/refine/aceh/lk_aceh.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/aceh/Lep_aceh.fasta -dbtype prot -out /local/workdir/mx/3e/refine/aceh/Lep_aceh\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/aceh/Lep_aceh -query /local/workdir/mx/3e/refine/aceh/lk_aceh.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/aceh/blastx_Lep_lk_aceh.txt\
+\
+\
+25.11 snx4 \
+mkdir /local/workdir/mx/3e/refine/snx4\
+cd /local/workdir/mx/3e/refine/snx4\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:1260001-1320000 > /local/workdir/mx/3e/refine/snx4/lk_snx4.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/snx4/Zoo_snx4.fasta -Q protein -t /local/workdir/mx/3e/refine/snx4/lk_snx4.fa -T dna --exhaustive TRUE --showalignment\
+## comes up with nothing ##\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/snx4/Mus_snx4.fasta -Q protein -t /local/workdir/mx/3e/refine/snx4/lk_snx4.fa -T dna --exhaustive TRUE --showalignment\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/snx4/Mus_snx4.fasta -dbtype prot -out /local/workdir/mx/3e/refine/snx4/Mus_snx4\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:1281567-1285014 > /local/workdir/mx/3e/refine/snx4/lk_snx4.fa\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/snx4/Mus_snx4 -query /local/workdir/mx/3e/refine/snx4/lk_snx4.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/snx4/blastx_Mus_lk_snx4.txt\
+\
+\
+25.12 ca1 \
+mkdir /local/workdir/mx/3e/refine/ca1\
+cd /local/workdir/mx/3e/refine/ca1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S006798:150001-400000 > /local/workdir/mx/3e/refine/ca1/lk_ca1.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ca1/Zoo_ca1.fasta -Q protein -t /local/workdir/mx/3e/refine/ca1/lk_ca1.fa -T dna --exhaustive TRUE --showalignment\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ca1/Zoo_ca4.fasta -Q protein -t /local/workdir/mx/3e/refine/ca1/lk_ca1.fa -T dna --exhaustive TRUE --showalignment\
+## ca1 better than ca4 ##\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/ca1/Zoo_ca1.fasta -dbtype prot -out /local/workdir/mx/3e/refine/ca1/Zoo_ca1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S006798:218097-381564 > /local/workdir/mx/3e/refine/ca1/lk_ca1.fa\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/ca1/Zoo_ca1 -query /local/workdir/mx/3e/refine/ca1/lk_ca1.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/ca1/blastx_Zoo_lk_ca1.txt\
+\
+\
+25.13 pk \
+mkdir /local/workdir/mx/3e/refine/pk\
+cd /local/workdir/mx/3e/refine/pk\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002690:1-350000 > /local/workdir/mx/3e/refine/pk/lk_pk.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/pk/Zoo_pk.fasta -Q protein -t /local/workdir/mx/3e/refine/pk/lk_pk.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002690:232376-239867 > /local/workdir/mx/3e/refine/pk/lk_pk.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/pk/Zoo_pk.fasta -dbtype prot -out /local/workdir/mx/3e/refine/pk/Zoo_pk\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/pk/Zoo_pk -query /local/workdir/mx/3e/refine/pk/lk_pk.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/pk/blastx_Zoo_lk_pk.txt\
+\
+\
+25.14 cnd \
+mkdir /local/workdir/mx/3e/refine/cnd\
+cd /local/workdir/mx/3e/refine/cnd\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002690:200001-420000 > /local/workdir/mx/3e/refine/cnd/lk_cnd.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/cnd/Zoo_cnd.fasta -Q protein -t /local/workdir/mx/3e/refine/cnd/lk_cnd.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002690:303111-328120 > /local/workdir/mx/3e/refine/cnd/lk_cnd.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/cnd/Zoo_cnd.fasta -dbtype prot -out /local/workdir/mx/3e/refine/cnd/Zoo_cnd\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/cnd/Zoo_cnd -query /local/workdir/mx/3e/refine/cnd/lk_cnd.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/cnd/blastx_Zoo_lk_cnd.txt\
+\
+\
+25.15 tlp1 \
+mkdir /local/workdir/mx/3e/refine/tlp1\
+cd /local/workdir/mx/3e/refine/tlp1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000590:1700001-1950000 > /local/workdir/mx/3e/refine/tlp1/lk_tlp1.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/tlp1/Sch_tlp1.fasta -Q protein -t /local/workdir/mx/3e/refine/tlp1/lk_tlp1.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000590:1820385-1831487 > /local/workdir/mx/3e/refine/tlp1/lk_tlp1.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/tlp1/Sch_tlp1.fasta -dbtype prot -out /local/workdir/mx/3e/refine/tlp1/Sch_tlp1\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/tlp1/Sch_tlp1 -query /local/workdir/mx/3e/refine/tlp1/lk_tlp1.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/tlp1/blastx_Sch_lk_tlp1.txt\
+\
+\
+25.16 grtp1 \
+mkdir /local/workdir/mx/3e/refine/grtp1\
+cd /local/workdir/mx/3e/refine/grtp1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S009230:60001-332000> /local/workdir/mx/3e/refine/grtp1/lk_grtp1.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/grtp1/Gry_grtp1.fasta -Q protein -t /local/workdir/mx/3e/refine/grtp1/lk_grtp1.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S009230:142985-181348 > /local/workdir/mx/3e/refine/grtp1/lk_grtp1.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/grtp1/Gry_grtp1.fasta -dbtype prot -out /local/workdir/mx/3e/refine/grtp1/Gry_grtp1\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/grtp1/Gry_grtp1 -query /local/workdir/mx/3e/refine/grtp1/lk_grtp1.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/grtp1/blastx_Gry_lk_grtp1.txt\
+\
+25.17 nrfp6\
+mkdir /local/workdir/mx/3e/refine/nrfp6\
+cd /local/workdir/mx/3e/refine/nrfp6\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000484:540001-900000 > /local/workdir/mx/3e/refine/nrfp6/lk_nrfp6.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/nrfp6/gry_nrfp6.fasta -Q protein -t /local/workdir/mx/3e/refine/nrfp6/lk_nrfp6.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S000484:541613-872745 > /local/workdir/mx/3e/refine/nrfp6/lk_nrfp6.fa\
+/programs/ncbi-blast-2.13.0/bin/makeblastdb -in /local/workdir/mx/3e/refine/nrfp6/gry_nrfp6.fasta -dbtype prot -out /local/workdir/mx/3e/refine/nrfp6/gry_nrfp6\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/3e/refine/nrfp6/gry_nrfp6 -query /local/workdir/mx/3e/refine/nrfp6/lk_nrfp6.fa -evalue 1e-5 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/nrfp6/blastx_gry_lk_nrfp6.txt\
+\
+\
+25.18 va5\
+mkdir /local/workdir/mx/3e/refine/va5\
+cd /local/workdir/mx/3e/refine/va5\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:970001-1200000 > /local/workdir/mx/3e/refine/va5/lk_va5.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/va5/Gry_va5.fasta -Q protein -t /local/workdir/mx/3e/refine/va5/lk_va5.fa -T dna --exhaustive TRUE --showalignment\
+# no match, I simply combined the two regions #\
+\
+\
+26. Cross check my annotation with mapped Lk and Lp transcriptome in the QTL region\
+\
+26.1 takeout on S001103\
+mkdir /local/workdir/mx/3e/refine/to\
+cd /local/workdir/mx/3e/refine/to\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001103:1-120000 > /local/workdir/mx/3e/refine/to/lk_to.fa\
+mkdir /local/workdir/mx/3e/refine/to/output\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/to/lk_to.fa -evalue 10 -num_threads 30 -outfmt 14 -out /local/workdir/mx/3e/refine/to/output/blastx_Lk_to_Dro\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/to/lk_to.fa -evalue 10 -num_threads 30 -outfmt 6 -out /local/workdir/mx/3e/refine/to/output/blastx_Lk_to_Dro.txt\
+mkdir /local/workdir/mx/3e/refine/to/output2\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/to/Dro_to.fasta -evalue 100 -num_threads 30 -outfmt 14 -out /local/workdir/mx/3e/refine/to/output2/tblastn_dro_to_lk\
+\
+\
+26.2 Neuropeptide F on S001262\
+mkdir /local/workdir/mx/3e/refine/npf\
+cd /local/workdir/mx/3e/refine/npf\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S001262:800001-1000000 > /local/workdir/mx/3e/refine/npf/lk_npf.fa\
+mkdir /local/workdir/mx/3e/refine/npf/output\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/npf/lk_npf.fa -evalue 10 -num_threads 30 -outfmt 14 -out /local/workdir/mx/3e/refine/npf/output/blastx_Lk_npf_Dro\
+mkdir /local/workdir/mx/3e/refine/npf/output2\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/npf/Dro_npf.fasta -evalue 10 -num_threads 30 -outfmt 14 -out /local/workdir/mx/3e/refine/npf/output2/tblastn_dro_npf_lk\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/npf/Dro_npf.fasta -evalue 100 -num_threads 10 -outfmt 14 -out /local/workdir/mx/3e/refine/npf/output2/tblastn_dro_npf_lk\
+\
+26.3 Diaphanous on S002870\
+mkdir /local/workdir/mx/3e/refine/dia\
+cd /local/workdir/mx/3e/refine/dia\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:20001-160000 > /local/workdir/mx/3e/refine/dia/lk_dia.fa\
+mkdir /local/workdir/mx/3e/refine/dia/output\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/dia/lk_dia.fa -evalue 10 -num_threads 10 -outfmt 14 -out /local/workdir/mx/3e/refine/dia/output/blastx_Lk_dia_Dro\
+mkdir /local/workdir/mx/3e/refine/dia/output2\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/dia/Dro_dia.fasta -evalue 10 -num_threads 10 -outfmt 14 -out /local/workdir/mx/3e/refine/dia/output2/tblastn_dro_dia_lk\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/dia/Dro_dia.fasta -evalue 10 -num_threads 10 -outfmt 6 -out /local/workdir/mx/3e/refine/dia/tblastn_dro_dia_lk.txt\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:20001-168000 > /local/workdir/mx/3e/refine/dia/lk_dia.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/dia/Dro_dia.fasta -Q protein -t /local/workdir/mx/3e/refine/dia/lk_dia.fa -T dna --exhaustive TRUE --showalignment\
+\
+26.4 mgc1 S002870\
+mkdir /local/workdir/mx/3e/refine/mgc1\
+cd /local/workdir/mx/3e/refine/mgc1\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:1106808-1125855 > /local/workdir/mx/3e/refine/mgc1/lk_mgc1.fa\
+mkdir /local/workdir/mx/3e/refine/mgc1/output\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/mgc1/lk_mgc1.fa -evalue 10 -num_threads 10 -outfmt 14 -out /local/workdir/mx/3e/refine/mgc1/output/blastx_Lk_mgc1_Dro\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/mgc1/Dro_aralar1.fasta -evalue 10 -num_threads 10 -outfmt 6 -out /local/workdir/mx/3e/refine/mgc1/tblastn_dro_aralar1_lk.txt\
+\
+\
+27. refine highlighted candidate gene AChE\
+mkdir /local/workdir/mx/3e/refine/ache\
+cd /local/workdir/mx/3e/refine/ache\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:530001-1000000 > /local/workdir/mx/3e/refine/ache/lk_ache.fa\
+mkdir /local/workdir/mx/3e/refine/ache/output\
+/programs/ncbi-blast-2.13.0/bin/blastx -task blastx -db /local/workdir/mx/databases/Dro/Drosophila_melanogaster.BDGP6.46.pep.all -query /local/workdir/mx/3e/refine/ache/lk_ache.fa -evalue 10 -num_threads 10 -outfmt 14 -out /local/workdir/mx/3e/refine/ache/output/blastx_Lk_ache_Dro\
+/programs/ncbi-blast-2.13.0/bin/tblastn -task tblastn -db /local/workdir/mx/genome/Lakoh057scf  -query /local/workdir/mx/3e/refine/ache/Dro_ace.fasta -evalue 10 -num_threads 10 -outfmt 6 -out /local/workdir/mx/3e/refine/mgc1/tblastn_dro_ace_lk.txt\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ache/Dro_ace.fasta -Q protein -t /local/workdir/mx/3e/refine/ache/lk_ache.fa -T dna --exhaustive TRUE --showalignment\
+/programs/samtools-1.15.1-r/bin/samtools faidx /local/workdir/mx/genome/Lakoh057scf.fa Lko057S002870:430001-1000000 > /local/workdir/mx/3e/refine/ache/lk_ache.fa\
+/programs/exonerate-2.2.0-x86_64/bin/exonerate --model protein2genome -q /local/workdir/mx/3e/refine/ache/Dro_ace.fasta -Q protein -t /local/workdir/mx/3e/refine/ache/lk_ache.fa -T dna --exhaustive TRUE --showalignment\
+\
+}

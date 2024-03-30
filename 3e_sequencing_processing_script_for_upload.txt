@@ -1,0 +1,496 @@
+1. download data and check file size
+md5sum /data/3E_rawreads/3E_S4_L001_R1_001.fastq.gz 
+md5sum /data/3E_rawreads/3E_S4_L001_R2_001.fastq.gz 
+md5sum /data/3E_rawreads/3E_S4_L002_R1_001.fastq.gz
+md5sum /data/3E_rawreads/3E_S4_L002_R2_001.fastq.gz 
+md5sum /data/3E_rawreads/3E-Plate-2_S8_L002_R1_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-2_S8_L002_R2_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-3_S4_L002_R1_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-3_S4_L002_R2_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-4_S5_L002_R1_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-4_S5_L002_R2_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-5_S6_L002_R1_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-5_S6_L002_R2_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-6_S7_L002_R1_001.fastq.gz
+md5sum /data/3E_rawreads/3E-Plate-6_S7_L002_R2_001.fastq.gz
+
+1.2 concatenate the two repeated libraries for plate 1 (no such need for other plates)
+1.2.1 concatenate two R1 files together and the two R2 files together
+cat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L001_R1_001.fastq.gz /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L002_R1_001.fastq.gz > /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_pooled_R1.fastq.gz
+cat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L001_R2_001.fastq.gz /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L002_R2_001.fastq.gz >  /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_pooled_R2.fastq.gz
+
+1.2.2 count the number of reads in the original and the concatenated files and make sure the merge went well
+echo $(zcat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_pooled_R1.fastq.gz | wc -l)4|bc   
+echo $(zcat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_pooled_R2.fastq.gz | wc -l)4|bc   
+echo $(zcat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L001_R1_001.fastq.gz | wc -l)4|bc  
+echo $(zcat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L001_R2_001.fastq.gz | wc -l)4|bc  
+echo $(zcat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L002_R1_001.fastq.gz | wc -l)4|bc 
+echo $(zcat /data/GBS_Xu/qtl3egbs/sequence_index/3E_S4_L002_R2_001.fastq.gz | wc -l)4|bc  
+
+
+=================================================
+2. demultiplex
+2.1 make index file and send it to remote server
+scp /Users/mingzi/Desktop/3e_gbsx_barcodes.txt mingzi@132.236.112.19:/data/GBS_Xu/qtl3egbs/sequence_index/
+
+2.2 make bash command to run GBSX, check that the file is correct. 
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate1.sh
+#!/bin/bash
+java -jar /data/GBS_Xu/softwares/GBSX/releases/latest/GBSX_v1.3.jar --Demultiplexer -mb 0 -t 12 -f1 /data/3E_rawreads/3E_S4_pooled_R1.fastq.gz -f2 /data/3E_rawreads/3E_S4_pooled_R2.fastq.gz -gzip true -i /data/GBS_Xu/qtl3egbs/sequence_index/3e_gbsx_barcodes.txt -o /data/GBS_Xu/qtl3egbs/3e_plate1_demultiplexed/
+EOF
+cat /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate1.sh
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate2.sh
+#!/bin/bash
+java -jar /data/GBS_Xu/softwares/GBSX/releases/latest/GBSX_v1.3.jar --Demultiplexer -mb 0 -t 12 -f1 /data/3E_rawreads/3E-Plate-2_S8_L002_R1_001.fastq.gz -f2 /data/3E_rawreads/3E-Plate-2_S8_L002_R2_001.fastq.gz -gzip true -i /data/GBS_Xu/qtl3egbs/sequence_index/3e_gbsx_barcodes.txt -o /data/GBS_Xu/qtl3egbs/3e_plate2_demultiplexed/
+EOF
+cat /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate2.sh
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate5.sh
+#!/bin/bash
+java -jar /data/GBS_Xu/softwares/GBSX/releases/latest/GBSX_v1.3.jar --Demultiplexer -mb 0 -t 12 -f1 /data/3E_rawreads/3E-Plate-5_S6_L002_R1_001.fastq.gz -f2 /data/3E_rawreads/3E-Plate-5_S6_L002_R2_001.fastq.gz -gzip true -i /data/GBS_Xu/qtl3egbs/sequence_index/3e_gbsx_barcodes.txt -o /data/GBS_Xu/qtl3egbs/3e_plate5_demultiplexed/
+EOF
+cat /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate5.sh
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate3.sh
+#!/bin/bash
+java -jar /data/GBS_Xu/softwares/GBSX/releases/latest/GBSX_v1.3.jar --Demultiplexer -mb 0 -t 6 -f1 /data/3E_rawreads/3E-Plate-3_S4_L002_R1_001.fastq.gz -f2 /data/3E_rawreads/3E-Plate-3_S4_L002_R2_001.fastq.gz -gzip true -i /data/GBS_Xu/qtl3egbs/sequence_index/3e_gbsx_barcodes.txt -o /data/GBS_Xu/qtl3egbs/3e_plate3_demultiplexed/
+EOF
+cat /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate3.sh
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate4.sh
+#!/bin/bash
+java -jar /data/GBS_Xu/softwares/GBSX/releases/latest/GBSX_v1.3.jar --Demultiplexer -mb 0 -t 6 -f1 /data/3E_rawreads/3E-Plate-4_S5_L002_R1_001.fastq.gz -f2 /data/3E_rawreads/3E-Plate-4_S5_L002_R2_001.fastq.gz -gzip true -i /data/GBS_Xu/qtl3egbs/sequence_index/3e_gbsx_barcodes.txt -o /data/GBS_Xu/qtl3egbs/3e_plate4_demultiplexed/
+EOF
+cat /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate4.sh
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate6.sh
+#!/bin/bash
+java -jar /data/GBS_Xu/softwares/GBSX/releases/latest/GBSX_v1.3.jar --Demultiplexer -mb 0 -t 6 -f1 /data/3E_rawreads/3E-Plate-6_S7_L002_R1_001.fastq.gz -f2 /data/3E_rawreads/3E-Plate-6_S7_L002_R2_001.fastq.gz -gzip true -i /data/GBS_Xu/qtl3egbs/sequence_index/3e_gbsx_barcodes.txt -o /data/GBS_Xu/qtl3egbs/3e_plate6_demultiplexed/
+EOF
+cat /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate6.sh
+
+2.3 execute bash command in the background
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate1_demultiplexed/
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate1.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate1_demultiplexed
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate1.sh &
+
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate2_demultiplexed/       
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate2.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate2_demultiplexed
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate2.sh &
+
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate5_demultiplexed/
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate5.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate5_demultiplexed
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate5.sh &
+
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate3_demultiplexed/
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate3.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate3_demultiplexed
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate3.sh &
+
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate4_demultiplexed/
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate4.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate4_demultiplexed
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate4.sh &
+
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate6_demultiplexed/
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate6.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate6_demultiplexed
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/gbsx_plate6.sh &
+
+
+2.4 check low count samples
+zgrep -c '^TGTGGA' /data/3E_rawreads/3E_S4_pooled_R1.fastq.gz #plate1_B02
+zgrep -c '^GGTATGAAT' /data/3E_rawreads/3E_S4_pooled_R1.fastq.gz #plate1_H06
+zgrep -c '^TTGCGCT' /data/3E_rawreads/3E-Plate-2_S8_L002_R1_001.fastq.gz #Plate2_H01
+zgrep -c '^TTGCGCT' /data/3E_rawreads/3E-Plate-5_S6_L002_R1_001.fastq.gz #plate5_H01
+
+
+====================================================================
+3. trim reads for adaptors, low quality bases, and filter by length
+3.1 process reads using trimmomatic, one example/plate is shown here. Full plate bash command generated using cat << EOF > file.sh
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate1_qc
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate2_qc
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate3_qc
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate4_qc
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate5_qc
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate6_qc
+
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate1_demultiplexed/A01.R1.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate1_demultiplexed/A01.R2.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate1_qc/3e_plate1_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate1_qc/3e_plate1_R1_A01_q30l50_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate1_qc/3e_plate1_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate1_qc/3e_plate1_R2_A01_q30l50_unpaired.fq ILLUMINACLIP:/data/common_contaminants/IlluminaAdapters_V2.fasta:2:30:10 SLIDINGWINDOW:4:30 MINLEN:50
+
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate2_qc/3e_plate2_R1_A01_q30l50.fq /data/GBS_Xu/qtl3egbs/3e_plate2_qc/3e_plate2_R2_A01_q30l50.fq /data/GBS_Xu/qtl3egbs/3e_plate2_qc2/3e_plate2_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate2_qc2/3e_plate2_R1_A01_q30l50_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate2_qc2/3e_plate2_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate2_qc2/3e_plate2_R2_A01_q30l50_unpaired.fq ILLUMINACLIP:/data/common_contaminants/IlluminaAdapters_V2.fasta:2:30:10 SLIDINGWINDOW:4:30 MINLEN:50
+
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate3_demultiplexed/A01.R1.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate3_demultiplexed/A01.R2.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate3_qc/3e_plate3_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc/3e_plate3_R1_A01_q30l50_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc/3e_plate3_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc/3e_plate3_R2_A01_q30l50_unpaired.fq ILLUMINACLIP:/data/common_contaminants/IlluminaAdapters_V2.fasta:2:30:10 SLIDINGWINDOW:4:30 MINLEN:50
+
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate4_demultiplexed/A01.R1.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate4_demultiplexed/A01.R2.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate4_qc/3e_plate4_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc/3e_plate4_R1_A01_q30l50_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc/3e_plate4_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc/3e_plate4_R2_A01_q30l50_unpaired.fq ILLUMINACLIP:/data/common_contaminants/IlluminaAdapters_V2.fasta:2:30:10 SLIDINGWINDOW:4:30 MINLEN:50
+
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate5_qc/3e_plate5_R1_A01_q30l50.fq /data/GBS_Xu/qtl3egbs/3e_plate5_qc/3e_plate5_R2_A01_q30l50.fq /data/GBS_Xu/qtl3egbs/3e_plate5_qc2/3e_plate5_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate5_qc2/3e_plate5_R1_A01_q30l50_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate5_qc2/3e_plate5_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate5_qc2/3e_plate5_R2_A01_q30l50_unpaired.fq ILLUMINACLIP:/data/common_contaminants/IlluminaAdapters_V2.fasta:2:30:10 SLIDINGWINDOW:4:30 MINLEN:50
+
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate6_demultiplexed/A01.R1.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate6_demultiplexed/A01.R2.fastq.gz /data/GBS_Xu/qtl3egbs/3e_plate6_qc/3e_plate6_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc/3e_plate6_R1_A01_q30l50_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc/3e_plate6_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc/3e_plate6_R2_A01_q30l50_unpaired.fq ILLUMINACLIP:/data/common_contaminants/IlluminaAdapters_V2.fasta:2:30:10 SLIDINGWINDOW:4:30 MINLEN:50
+
+
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate1.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate2.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate3.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate4.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate5.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate6.sh
+
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate1.sh &
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate2.sh &
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate3.sh &
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate4.sh &
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate5.sh &
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate6.sh &
+
+
+
+3.2 check with fastQC
+##I randomly checked 3 R1 and 3 R2 from each plate. Read quality all looked good and quality uniformly high and no adaptor left for plate 1,2,5. Plate3,4,6 R1R2 first 5 nucleotides likely adaptors because they are all the same for all reads at all samples. R2 the first nucleotide low quality ##
+   
+## crop the first 5 nuceotides off R1 and R2 for plate 3,4,6
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate3_r2.sh
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate3_qc/3e_plate3_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc/3e_plate3_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc2/3e_plate3_R1_A01_q30l50_h5_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc2/3e_plate3_R1_A01_q30l50_h5_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc2/3e_plate3_R2_A01_q30l50_h5_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate3_qc2/3e_plate3_R2_A01_q30l50_h5_unpaired.fq HEADCROP:5 MINLEN:50
+...
+EOF
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate4_r2.sh
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate4_qc/3e_plate4_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc/3e_plate4_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc2/3e_plate4_R1_A01_q30l50_h5_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc2/3e_plate4_R1_A01_q30l50_h5_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc2/3e_plate4_R2_A01_q30l50_h5_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate4_qc2/3e_plate4_R2_A01_q30l50_h5_unpaired.fq HEADCROP:5 MINLEN:50
+...
+EOF
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate6_r2.sh
+java -jar /data/software/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 /data/GBS_Xu/qtl3egbs/3e_plate6_qc/3e_plate6_R1_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc/3e_plate6_R2_A01_q30l50_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc2/3e_plate6_R1_A01_q30l50_h5_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc2/3e_plate6_R1_A01_q30l50_h5_unpaired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc2/3e_plate6_R2_A01_q30l50_h5_paired.fq /data/GBS_Xu/qtl3egbs/3e_plate6_qc2/3e_plate6_R2_A01_q30l50_h5_unpaired.fq HEADCROP:5 MINLEN:50
+...
+EOF
+
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate3_qc2
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate4_qc2
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate6_qc2
+
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate3_r2.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate4_r2.sh
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate6_r2.sh
+
+cd /data/GBS_Xu/qtl3egbs/3e_plate3_qc2
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate3_r2.sh &
+cd /data/GBS_Xu/qtl3egbs/3e_plate4_qc2
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate4_r2.sh &
+cd /data/GBS_Xu/qtl3egbs/3e_plate6_qc2
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/trimmomatic_plate6_r2.sh &
+
+## FastQC check look good ##
+
+3.3 count number of reads postqc. Here shows one sample. Use bash script to process a whole plate. The number of reads = output/4
+wc -l /data/GBS_Xu/qtl3egbs/3e_plate1_qc2/3e_plate1_R1_A01_q30l50_paired.fq
+
+
+==========================================
+4. map reads
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_readmapping.sh
+#!/bin/bash
+bowtie2 -t -p 6 -x /data/bowtieindexes/Lakoh057scf -1 /data/GBS_Xu/qtl3egbs/3e_plate1_qc2/3e_plate1_R1_A01_q30l50_paired.fq -2 /data/GBS_Xu/qtl3egbs/3e_plate1_qc2/3e_plate1_R2_A01_q30l50_paired.fq -S /data/GBS_Xu/qtl3egbs/3e_plate1_mapped/3e_plate1_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_readmapping.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate1_mapped
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_readmapping.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate2_readmapping.sh
+#!/bin/bash
+bowtie2 -t -p 6 -x /data/bowtieindexes/Lakoh057scf -1 /data/GBS_Xu/qtl3egbs/3e_plate2_qc2/3e_plate2_R1_A01_q30l50_paired.fq -2 /data/GBS_Xu/qtl3egbs/3e_plate2_qc2/3e_plate2_R2_A01_q30l50_paired.fq -S /data/GBS_Xu/qtl3egbs/3e_plate2_mapped/3e_plate2_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate2_readmapping.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate2_mapped
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate2_readmapping.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate5_readmapping.sh
+#!/bin/bash
+bowtie2 -t -p 6 -x /data/bowtieindexes/Lakoh057scf -1 /data/GBS_Xu/qtl3egbs/3e_plate5_qc2/3e_plate5_R1_A01_q30l50_paired.fq -2 /data/GBS_Xu/qtl3egbs/3e_plate5_qc2/3e_plate5_R2_A01_q30l50_paired.fq -S /data/GBS_Xu/qtl3egbs/3e_plate5_mapped/3e_plate5_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate5_readmapping.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate5_mapped
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate5_readmapping.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate3_readmapping.sh
+#!/bin/bash
+bowtie2 -t -p 5 -x /data/bowtieindexes/Lakoh057scf -1 /data/GBS_Xu/qtl3egbs/3e_plate3_qc2/3e_plate3_R1_A01_q30l50_h5_paired.fq -2 /data/GBS_Xu/qtl3egbs/3e_plate3_qc2/3e_plate3_R2_A01_q30l50_h5_paired.fq -S /data/GBS_Xu/qtl3egbs/3e_plate3_mapped/3e_plate3_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate3_readmapping.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate3_mapped
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate3_readmapping.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate4_readmapping.sh
+#!/bin/bash
+bowtie2 -t -p 5 -x /data/bowtieindexes/Lakoh057scf -1 /data/GBS_Xu/qtl3egbs/3e_plate4_qc2/3e_plate4_R1_A01_q30l50_h5_paired.fq -2 /data/GBS_Xu/qtl3egbs/3e_plate4_qc2/3e_plate4_R2_A01_q30l50_h5_paired.fq -S /data/GBS_Xu/qtl3egbs/3e_plate4_mapped/3e_plate4_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate4_readmapping.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate4_mapped
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate4_readmapping.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate6_readmapping.sh
+#!/bin/bash
+bowtie2 -t -p 5 -x /data/bowtieindexes/Lakoh057scf -1 /data/GBS_Xu/qtl3egbs/3e_plate6_qc2/3e_plate6_R1_A01_q30l50_h5_paired.fq -2 /data/GBS_Xu/qtl3egbs/3e_plate6_qc2/3e_plate6_R2_A01_q30l50_h5_paired.fq -S /data/GBS_Xu/qtl3egbs/3e_plate6_mapped/3e_plate6_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate6_readmapping.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate6_mapped
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate6_readmapping.sh &
+
+4.2 count number of mapped reads
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_sam_count.sh
+#!/bin/bash
+samtools view -F4 -S -c /data/GBS_Xu/qtl3egbs/3e_plate1_mapped/3e_plate1_A01_mapped.sam
+... 
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_sam_count.sh
+/data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_sam_count.sh
+
+repeat for other plates
+
+=================================================
+5. convert sam to bam and conbine samples in a plate
+5.1 convert sam to bam
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate1_mapped_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate2_mapped_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate5_mapped_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate3_mapped_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e_plate4_mapped_bam
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_samtobam.sh
+#!/bin/bash
+samtools view -F4 -Sb -o /data/GBS_Xu/qtl3egbs/3e_plate1_mapped_bam/3e_plate1_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e_plate1_mapped/3e_plate1_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_samtobam.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate1_mapped_bam
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate1_samtobam.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate2_samtobam.sh
+#!/bin/bash
+samtools view -F4 -Sb -o /data/GBS_Xu/qtl3egbs/3e_plate2_mapped_bam/3e_plate2_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e_plate2_mapped/3e_plate2_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate2_samtobam.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate2_mapped_bam
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate2_samtobam.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate5_samtobam.sh
+#!/bin/bash
+samtools view -F4 -Sb -o /data/GBS_Xu/qtl3egbs/3e_plate5_mapped_bam/3e_plate5_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e_plate5_mapped/3e_plate5_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate5_samtobam.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate5_mapped_bam
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate5_samtobam.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate3_samtobam.sh
+#!/bin/bash
+samtools view -F4 -Sb -o /data/GBS_Xu/qtl3egbs/3e_plate3_mapped_bam/3e_plate3_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e_plate3_mapped/3e_plate3_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate3_samtobam.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate3_mapped_bam
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate3_samtobam.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate4_samtobam.sh
+#!/bin/bash
+samtools view -F4 -Sb -o /data/GBS_Xu/qtl3egbs/3e_plate4_mapped_bam/3e_plate4_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e_plate4_mapped/3e_plate4_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate4_samtobam.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate4_mapped_bam
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate4_samtobam.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate6_samtobam.sh
+#!/bin/bash
+samtools view -F4 -Sb -o /data/GBS_Xu/qtl3egbs/3e_plate6_mapped_bam/3e_plate6_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e_plate6_mapped/3e_plate6_A01_mapped.sam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate6_samtobam.sh
+cd /data/GBS_Xu/qtl3egbs/3e_plate6_mapped_bam
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e_plate6_samtobam.sh &
+
+
+5.2 add read group tag and merge bam files by family and sort merged bam file
+5.2.1 move all bam files from family 4 to the same folder
+mkdir /data/GBS_Xu/qtl3egbs/3e.2_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e.3_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e.4_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e.6_bam
+mkdir /data/GBS_Xu/qtl3egbs/3e.8_bam
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_move_bam.sh
+#!/bin/bash
+mv /data/GBS_Xu/qtl3egbs/3e_plate1_mapped_bam/3e_plate1_A01_mapped.bam /data/GBS_Xu/qtl3egbs/3e.4_bam/3e_plate1_A01_mapped.bam
+...
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_move_bam.sh
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_move_bam.sh &
+
+repeat for all other families
+mv /data/GBS_Xu/qtl3egbs/3e_plate6_mapped_bam/3e_plate6_G06_mapped.bam /data/qtl2cgbs/2c.2_bam/3e_plate6_G06_mapped.bam
+mv /data/GBS_Xu/qtl3egbs/3e_plate6_mapped_bam/3e_plate6_E04_mapped.bam /data/qtl2cgbs/2c.3_bam/3e_plate6_E04_mapped.bam
+mv /data/GBS_Xu/qtl3egbs/3e_plate5_mapped_bam/3e_plate5_G05_mapped.bam /data/GBS_Xu/qtl3egbs/3e.6_bam/3e_plate5_G05_mapped.bam
+mv /data/GBS_Xu/qtl3egbs/3e_plate4_mapped_bam/3e_plate4_E01_mapped.bam /data/GBS_Xu/qtl3egbs/3e.8_bam/3e_plate4_E01_mapped.bam
+
+
+5.2.2 add read group (individual ID) to individual bam and combine bam into one file
+## only done for 3E.4, 3E.6, 3E.8, the only 3 families big enough for mapping ##
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_bam_add_rg.sh
+/data/GBS_Xu/softwares/bamaddrg/bamaddrg -b /data/GBS_Xu/qtl3egbs/3e.4_bam/3e_plate1_A01_mapped.bam -s B2238 -r B2238 \
+-b /data/GBS_Xu/qtl3egbs/3e.4_bam/3e_plate1_B01_mapped.bam -s B2239 -r B2239 \
+...
+-b /data/GBS_Xu/qtl3egbs/3e.4_bam/3e_plate5_F12_mapped.bam -s 276 -r 276 > /data/GBS_Xu/qtl3egbs/3e.4_bam/3e.4_combined.bam
+EOFchmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_bam_add_rg.sh
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_bam_add_rg.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_bam_add_rg.sh
+/data/GBS_Xu/softwares/bamaddrg/bamaddrg -b /data/GBS_Xu/qtl3egbs/3e.6_bam/3e_plate5_G05_mapped.bam -s 6 -r 6 \-b /data/GBS_Xu/qtl3egbs/3e.6_bam/3e_plate5_G06_mapped.bam -s 13 -r 13 \
+...
+-b /data/GBS_Xu/qtl3egbs/3e.6_bam/3e_plate3_F02_mapped.bam -s B2657 -r B2657 > /data/GBS_Xu/qtl3egbs/3e.6_bam/3e.6_combined.bam
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_bam_add_rg.sh
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_bam_add_rg.sh &
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.8_bam_add_rg.sh
+/data/GBS_Xu/softwares/bamaddrg/bamaddrg -b /data/GBS_Xu/qtl3egbs/3e.8_bam/3e_plate4_E01_mapped.bam -s 28 -r 28 \-b /data/GBS_Xu/qtl3egbs/3e.8_bam/3e_plate4_E02_mapped.bam -s 100 -r 100 \
+...
+-b /data/GBS_Xu/qtl3egbs/3e.8_bam/3e_plate4_D12_mapped.bam -s B2654 -r B2654 > /data/GBS_Xu/qtl3egbs/3e.8_bam/3e.8_combined.bam
+EOF
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.8_bam_add_rg.sh
+nohup /data/GBS_Xu/qtl3egbs/3e_scripts/3e.8_bam_add_rg.sh &
+
+5.2.3 count the number of RG in the combined bam to make sure the run went ok
+samtools view -H /data/GBS_Xu/qtl3egbs/3e.4_bam/3e.4_combined.bam | grep '@RG' | wc -l
+209
+samtools view -H /data/GBS_Xu/qtl3egbs/3e.6_bam/3e.6_combined.bam | grep '@RG' | wc -l
+123
+samtools view -H /data/GBS_Xu/qtl3egbs/3e.8_bam/3e.8_combined.bam | grep '@RG' | wc -l
+196
+
+5.2.4 sort the combined bam
+cd /data/GBS_Xu/qtl3egbs/3e.4_bam
+nohup samtools sort /data/GBS_Xu/qtl3egbs/3e.4_bam/3e.4_combined.bam -o /data/GBS_Xu/qtl3egbs/3e.4_bam/3e.4_combined.bam &
+
+cd /data/GBS_Xu/qtl3egbs/3e.6_bam
+nohup samtools sort /data/GBS_Xu/qtl3egbs/3e.6_bam/3e.6_combined.bam -o /data/GBS_Xu/qtl3egbs/3e.6_bam/3e.6_combined.bam &
+
+cd /data/GBS_Xu/qtl3egbs/3e.8_bam
+nohup samtools sort /data/GBS_Xu/qtl3egbs/3e.8_bam/3e.8_combined.bam -o /data/GBS_Xu/qtl3egbs/3e.8_bam/3e.8_combined.bam &
+
+
+================================================
+6. SNP calling and filtering
+6.1 call SNP using bowtie2
+mkdir /data/GBS_Xu/qtl3egbs/3e.4_snp
+mkdir /data/GBS_Xu/qtl3egbs/3e.6_snp
+mkdir /data/GBS_Xu/qtl3egbs/3e.8_snp
+
+cd /data/GBS_Xu/qtl3egbs/3e.4_snp
+nohup freebayes -i -X -u -b /data/GBS_Xu/qtl3egbs/3e.4_bam/3e.4_combined.bam -v /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_mnc2.vcf -f /data/bowtieindexes/Lakoh057scf.fa --min-coverage 2 --read-mismatch-limit 2 &
+cd /data/GBS_Xu/qtl3egbs/3e.6_snp
+nohup freebayes -i -X -u -b /data/GBS_Xu/qtl3egbs/3e.6_bam/3e.6_combined.bam -v /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_mnc2.vcf -f /data/bowtieindexes/Lakoh057scf.fa --min-coverage 2 --read-mismatch-limit 2 &
+cd /data/GBS_Xu/qtl3egbs/3e.8_snp
+nohup freebayes -i -X -u -b /data/GBS_Xu/qtl3egbs/3e.8_bam/3e.8_combined.bam -v /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_mnc2.vcf -f /data/bowtieindexes/Lakoh057scf.fa --min-coverage 2 --read-mismatch-limit 2 &
+
+grep -v '#' /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_mnc2.vcf | wc -l
+grep -v '#' /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_mnc2.vcf | wc -l
+grep -v '#' /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_mnc2.vcf | wc -l
+
+6.2 soft filtering
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_mnc2.vcf --remove-indels --min-alleles 2 --max-alleles 2 --maf 0.025 --max-missing 0.8 --minDP 5 --recode --recode-INFO-all --out /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5
+After filtering, kept 18997 out of a possible 1144280 Sites
+
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_mnc2.vcf --remove-indels --min-alleles 2 --max-alleles 2 --maf 0.025 --max-missing 0.8 --minDP 5 --recode --recode-INFO-all --out /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5
+After filtering, kept 21795 out of a possible 788393 Sites
+
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_mnc2.vcf --remove-indels --min-alleles 2 --max-alleles 2 --maf 0.025 --max-missing 0.8 --minDP 5 --recode --recode-INFO-all --out /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5
+After filtering, kept 20678 out of a possible 1106259 Sites
+
+6.3 hard filtering
+/data/software/vcflib/bin/vcffilter -f "QUAL > 30 & SAP > 0.0001 & SRP > 0.0001" /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5.vcf > /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5_hardfil.vcf
+
+/data/software/vcflib/bin/vcffilter -f "QUAL > 30 & SAP > 0.0001 & SRP > 0.0001" /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5.vcf > /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5_hardfil.vcf
+
+/data/software/vcflib/bin/vcffilter -f "QUAL > 30 & SAP > 0.0001 & SRP > 0.0001" /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5.vcf > /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5_hardfil.vcf
+
+grep -v '#' /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5_hardfil.vcf | wc -l
+grep -v '#' /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5_hardfil.vcf | wc -l
+grep -v '#' /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5_hardfil.vcf | wc -l
+
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5_hardfil.vcf --min-meanDP 20 --recode --recode-INFO-all --out /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5_meandp20_hardfil.vcf
+
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5_hardfil.vcf --min-meanDP 20 --recode --recode-INFO-all --out /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5_meandp20_hardfil.vcf
+
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5_hardfil.vcf --min-meanDP 20 --recode --recode-INFO-all --out /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5_meandp20_hardfil
+
+6.4 convert to hmp formatin tassel
+cd /data/GBS_Xu/softwares/tassel4-standalone
+perl start_tassel.pl
+
+
+7. convert nucleotide to genotype
+7.1 obtain nucleotide at SNP positions from the reference genome
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_refcall.sh
+#!/bin/bash
+samtools faidx /data/bowtieindexes/Lakoh057scf.fa Lko057C000537:172-172 \Lko057C002158:76-76 \Lko057C002158:132-132 \...
+Lko057S023230:4320-4320 > /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_ref_nuc.txt
+EOF
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_refcall.sh
+#!/bin/bash
+samtools faidx /data/bowtieindexes/Lakoh057scf.fa Lko057C000537:172-172 \Lko057C001853:41-41 \Lko057C002158:76-76 \
+...
+Lko057S023230:4320-4320 > /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_ref_nuc.txt
+EOF
+
+cat << EOF > /data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_refcall.sh
+#!/bin/bash
+samtools faidx /data/bowtieindexes/Lakoh057scf.fa Lko057C002591:88_88 \Lko057C002591:114_114 \Lko057C002742:61_61 \
+...
+Lko057S023230:4345_4345 > /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_ref_nuc.txt
+EOF
+
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_refcall.sh
+/data/GBS_Xu/qtl3egbs/3e_scripts/3e.4_refcall.sh
+
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_refcall.sh
+/data/GBS_Xu/qtl3egbs/3e_scripts/3e.6_refcall.sh
+
+chmod 755 /data/GBS_Xu/qtl3egbs/3e_scripts/3e.8_refcall.sh
+/data/GBS_Xu/qtl3egbs/3e_scripts/3e.8_refcall.sh
+
+7.2 call genotype in excel
+
+7.3 calculate BH adjusted p in R:
+> qtl3e.4<-read.table("3e.4_snp_miss20_maf0.025_mindp5_meandp20_hardfil_hmp_geno_call.csv",sep=",",header=T)
+> q.3e.4<-p.adjust(qtl3e.4$p,"BH",n=11194)
+> qtl3e.4.adjp<-cbind(qtl3e.4,q.3e.4)
+> write.table(qtl3e.4.adjp,"3e.4_snp_miss20_maf0.025_mindp5_meandp20_hardfil_sd.txt",sep="\t")
+
+> qtl3e.6<-read.table("3e.6_snp_miss20_maf0.025_mindp5_meandp20_hardfil_hmp_geno_call.csv",sep=",",header=T)
+> q.3e.6<-p.adjust(qtl3e.6$p,"BH",n=12449)
+> qtl3e.6.adjp<-cbind(qtl3e.6,q.3e.6)
+> write.table(qtl3e.6.adjp,"3e.6_snp_miss20_maf0.025_mindp5_meandp20_hardfil_sd.txt",sep="\t")
+
+> qtl3e.8<-read.table("3e.8_snp_miss20_maf0.025_mindp5_meandp20_hardfil_hmp_geno_call.csv",sep=",",header=T)
+> q.3e.8<-p.adjust(qtl3e.8$p,"BH",n=12449)
+> qtl3e.8.adjp<-cbind(qtl3e.8,q.3e.8)
+> write.table(qtl3e.8.adjp,"3e.8_snp_miss20_maf0.025_mindp5_meandp20_hardfil_sd.txt",sep="\t")
+
+7.4 get mean depth stat for SNP thinning
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.4_snp/3e.4_snp_miss20_maf0.025_mindp5_meandp20_hardfil.vcf --site-mean-depth --out /data/GBS_Xu/qtl3egbs/3e_reports/3e.4_siteDP
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.6_snp/3e.6_snp_miss20_maf0.025_mindp5_meandp20_hardfil.vcf --site-mean-depth --out /data/GBS_Xu/qtl3egbs/3e_reports/3e.6_siteDP
+vcftools --vcf /data/GBS_Xu/qtl3egbs/3e.8_snp/3e.8_snp_miss20_maf0.025_mindp5_meandp20_hardfil.vcf --site-mean-depth --out /data/GBS_Xu/qtl3egbs/3e_reports/3e.8_siteDP
+
+7.5 select one SNP per scaffold in excel
